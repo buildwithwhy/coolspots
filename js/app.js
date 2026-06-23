@@ -376,8 +376,9 @@ function wireControls() {
     refresh();
   });
 
-  // about / contact (brand button)
-  $('#brand').addEventListener('click', openAbout);
+  // brand = back to start; ⓘ = about / contact
+  $('#brand').addEventListener('click', goHome);
+  $('#btn-about').addEventListener('click', openAbout);
   $('#about-close').addEventListener('click', closeAbout);
   $('#about-backdrop').addEventListener('click', (e) => {
     if (e.target.id === 'about-backdrop') closeAbout();
@@ -555,6 +556,27 @@ function locate() {
 function markUserLayerDisabled() {
   const note = $('#supabase-note');
   if (note) note.hidden = false;
+}
+
+// --- back to start (logo) ---------------------------------------------------
+function goHome() {
+  // reset filter state + the controls that reflect it
+  state.filters = { types: new Set(['pub', 'bar', 'cafe', 'restaurant', 'museum']), ac: 'all', hideChains: false, openNow: false, query: '' };
+  $('#search').value = '';
+  document.querySelectorAll('input[data-type]').forEach((cb) => (cb.checked = true));
+  document.querySelector('input[name="ac"][value="all"]').checked = true;
+  $('#hide-chains').checked = false;
+  $('#open-now').checked = false;
+  // close everything that might be open
+  closeAutocomplete();
+  $('#filters').classList.remove('open');
+  $('#list-panel').classList.remove('open');
+  closeDetail();
+  closeAbout();
+  closeSuggest();
+  // recenter the map and re-render
+  MapView.resetView();
+  refresh();
 }
 
 // --- about / contact --------------------------------------------------------

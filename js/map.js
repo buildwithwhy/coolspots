@@ -185,6 +185,11 @@ export function clearHighlight() {
   }
 }
 
+export function resetView() {
+  clearHighlight();
+  map.flyTo({ center: LONDON_CENTER, zoom: DEFAULT_ZOOM, speed: 1.2 });
+}
+
 export function setUserLocation(lat, lon, { fly = true } = {}) {
   if (userMarker) userMarker.remove();
   const el = document.createElement('div');

@@ -92,6 +92,7 @@ body {
 }
 .pill:hover { border-color: var(--cool); }
 .pill:active { background: #f0f9ff; }
+.pill--icon { width: 40px; padding: 0; justify-content: center; font-size: 17px; line-height: 1; }
 #btn-locate .pin-ico { color: var(--cool); font-weight: 700; }
 #btn-locate.loading { opacity: 0.6; pointer-events: none; }
 
