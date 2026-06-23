@@ -17,7 +17,9 @@
         <span class="brand__name">Cool Spots <span>London</span></span>
       </div>
       <div class="search">
-        <input id="search" type="search" placeholder="Search name or postcode…" autocomplete="off" />
+        <input id="search" type="search" placeholder="Search name or postcode…" autocomplete="off"
+          role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="search-suggest" />
+        <ul id="search-suggest" role="listbox" hidden></ul>
       </div>
       <div class="topbar__actions">
         <button id="btn-locate" class="pill" title="Find me">
@@ -49,7 +51,6 @@
         <label><input type="checkbox" id="open-now" /> Open now</label>
         <label><input type="checkbox" id="hide-chains" /> Hide chains</label>
       </div>
-      <button id="btn-suggest" class="pill pill--accent">＋ Suggest a place</button>
       <div class="filters__foot">
         <span id="result-count">—</span>
         <span id="data-date" class="muted"></span>
@@ -69,6 +70,10 @@
       </div>
 
       <div id="load-pill"><span id="load-status">Loading…</span></div>
+
+      <button id="fab-suggest" aria-label="Suggest a place" title="Suggest a place">
+        <span class="fab-ico">＋</span><span class="fab-label">Suggest a place</span>
+      </button>
     </main>
 
     <!-- list panel / bottom sheet -->

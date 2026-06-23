@@ -24,6 +24,7 @@ import { AC_LABELS, AC_COLORS, TAG_OPTIONS } from './config.js';
 
 const $ = (sel) => document.querySelector(sel);
 const LIST_LIMIT = 80;
+let closeAutocomplete = () => {}; // set by wireSearch, called on Escape
 
 const state = {
   filters: { types: new Set(['pub', 'bar', 'cafe', 'restaurant', 'museum']), ac: 'all', hideChains: false, openNow: false, query: '' },
@@ -72,6 +73,13 @@ function refresh() {
   state.filtered = filterVenues(state.filters);
   MapView.setData(toGeoJSON(state.filtered));
   $('#result-count').textContent = `${state.filtered.length.toLocaleString()} shown`;
+
+  // make search matches pop, and frame them when the result set is small
+  const searching = !!state.filters.query;
+  MapView.setSearchActive(searching);
+  if (searching && state.filtered.length > 0 && state.filtered.length <= 80) {
+    MapView.fitToVenues(state.filtered);
+  }
   updateList();
 }
 
@@ -332,16 +340,7 @@ async function shareVenue(v) {
 
 // --- controls ---------------------------------------------------------------
 function wireControls() {
-  // search (debounced)
-  let t;
-  $('#search').addEventListener('input', (e) => {
-    clearTimeout(t);
-    const val = e.target.value;
-    t = setTimeout(() => {
-      state.filters.query = val.trim();
-      refresh();
-    }, 180);
-  });
+  wireSearch();
 
   // type filters
   document.querySelectorAll('input[data-type]').forEach((cb) => {
@@ -375,13 +374,32 @@ function wireControls() {
     refresh();
   });
 
-  // suggest a place
-  $('#btn-suggest').addEventListener('click', openSuggest);
+  // suggest a place (floating button)
+  $('#fab-suggest').addEventListener('click', openSuggest);
   $('#suggest-close').addEventListener('click', closeSuggest);
   $('#suggest-backdrop').addEventListener('click', (e) => {
     if (e.target.id === 'suggest-backdrop') closeSuggest();
   });
   $('#suggest-form').addEventListener('submit', onSuggestSubmit);
+
+  // close the filters panel on outside-click / Escape
+  document.addEventListener('click', (e) => {
+    const filters = $('#filters');
+    if (
+      filters.classList.contains('open') &&
+      !filters.contains(e.target) &&
+      !$('#btn-filters').contains(e.target)
+    ) {
+      filters.classList.remove('open');
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    closeAutocomplete();
+    if (!$('#suggest-backdrop').hidden) closeSuggest();
+    else if ($('#filters').classList.contains('open')) $('#filters').classList.remove('open');
+    else if ($('#detail').classList.contains('open')) closeDetail();
+  });
 
   // panel toggles
   $('#btn-filters').addEventListener('click', () => $('#filters').classList.toggle('open'));
@@ -390,6 +408,108 @@ function wireControls() {
 
   // geolocation
   $('#btn-locate').addEventListener('click', locate);
+}
+
+// --- search + autocomplete --------------------------------------------------
+function buildSuggestions(q) {
+  q = q.toLowerCase();
+  const starts = [];
+  const incl = [];
+  for (const v of allVenues()) {
+    const n = v.name.toLowerCase();
+    const i = n.indexOf(q);
+    if (i === 0) starts.push(v);
+    else if (i > 0 && incl.length < 8) incl.push(v);
+    if (starts.length >= 8) break;
+  }
+  return (starts.length >= 8 ? starts : starts.concat(incl)).slice(0, 8);
+}
+
+function wireSearch() {
+  const input = $('#search');
+  const box = $('#search-suggest');
+  let debounce;
+  let items = [];
+  let active = -1;
+
+  const close = () => {
+    box.hidden = true;
+    box.innerHTML = '';
+    input.setAttribute('aria-expanded', 'false');
+    active = -1;
+  };
+  closeAutocomplete = close;
+
+  const choose = (v) => {
+    input.value = v.name;
+    state.filters.query = '';
+    refresh(); // clear the search-narrowing so the picked venue isn't isolated
+    close();
+    openDetail(v.id);
+  };
+
+  const paintActive = () =>
+    box.querySelectorAll('.suggest-item').forEach((li, i) => li.classList.toggle('active', i === active));
+
+  const render = (q) => {
+    if (!q) return close();
+    items = buildSuggestions(q);
+    active = -1;
+    if (!items.length) {
+      box.innerHTML = '<li class="suggest-empty">No matches — tap ＋ to suggest a place.</li>';
+    } else {
+      box.innerHTML = items
+        .map((v, i) => {
+          const k = v.ac?.status || 'unknown';
+          return `<li class="suggest-item" role="option" data-i="${i}">
+            <span class="dot" style="background:${AC_COLORS[k]}"></span>
+            <div class="suggest-item__body">
+              <div class="suggest-item__name">${esc(v.name)}</div>
+              <div class="suggest-item__meta">${capitalize(v.type)} · ${AC_LABELS[k]}${v.postcode ? ' · ' + esc(v.postcode) : ''}</div>
+            </div></li>`;
+        })
+        .join('');
+      box.querySelectorAll('.suggest-item').forEach((li) =>
+        li.addEventListener('mousedown', (e) => {
+          e.preventDefault(); // fire before the input's blur
+          choose(items[+li.dataset.i]);
+        })
+      );
+    }
+    box.hidden = false;
+    input.setAttribute('aria-expanded', 'true');
+  };
+
+  input.addEventListener('input', (e) => {
+    const val = e.target.value;
+    render(val.trim());
+    clearTimeout(debounce);
+    debounce = setTimeout(() => {
+      state.filters.query = val.trim();
+      refresh();
+    }, 180);
+  });
+  input.addEventListener('focus', () => {
+    if (input.value.trim()) render(input.value.trim());
+  });
+  input.addEventListener('blur', () => setTimeout(close, 150));
+  input.addEventListener('keydown', (e) => {
+    if (box.hidden) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      active = Math.min(active + 1, items.length - 1);
+      paintActive();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      active = Math.max(active - 1, 0);
+      paintActive();
+    } else if (e.key === 'Enter' && active >= 0 && items[active]) {
+      e.preventDefault();
+      choose(items[active]);
+    } else if (e.key === 'Escape') {
+      close();
+    }
+  });
 }
 
 function togglePanel(sel) {

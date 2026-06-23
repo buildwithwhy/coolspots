@@ -6,6 +6,12 @@ let map;
 let userMarker = null;
 let selectedMarker = null;
 
+// venue dot sizes — bumped when a search is active so matches pop
+const RADIUS = {
+  normal: ['interpolate', ['linear'], ['zoom'], 11, 6, 15, 9, 18, 13],
+  search: ['interpolate', ['linear'], ['zoom'], 10, 8, 14, 12, 18, 17],
+};
+
 // circle-color expression keyed on the feature's acStatus property
 const statusColorExpr = [
   'match',
@@ -71,9 +77,9 @@ export function initMap({ onVenueClick, onMoveEnd }) {
       filter: ['!', ['has', 'point_count']],
       paint: {
         'circle-color': statusColorExpr,
-        'circle-radius': ['interpolate', ['linear'], ['zoom'], 11, 5, 15, 8, 18, 11],
+        'circle-radius': RADIUS.normal,
         'circle-stroke-color': '#ffffff',
-        'circle-stroke-width': 1.5,
+        'circle-stroke-width': 2,
         'circle-opacity': 0.95,
       },
     });
@@ -114,6 +120,31 @@ export function onReady(cb) {
 export function setData(geojson) {
   const src = map.getSource('venues');
   if (src) src.setData(geojson);
+}
+
+// enlarge + ring the dots while a search is active so matches stand out
+let searchActive = false;
+export function setSearchActive(active) {
+  if (active === searchActive || !map.getLayer('venue-points')) return;
+  searchActive = active;
+  map.setPaintProperty('venue-points', 'circle-radius', active ? RADIUS.search : RADIUS.normal);
+  map.setPaintProperty('venue-points', 'circle-stroke-color', active ? '#0369a1' : '#ffffff');
+  map.setPaintProperty('venue-points', 'circle-stroke-width', active ? 2.5 : 2);
+}
+
+// frame a set of venues (used to zoom to search results)
+export function fitToVenues(venues) {
+  if (!venues.length) return;
+  if (venues.length === 1) {
+    map.easeTo({ center: [venues[0].lon, venues[0].lat], zoom: 16, duration: 600 });
+    return;
+  }
+  let minLon = Infinity, minLat = Infinity, maxLon = -Infinity, maxLat = -Infinity;
+  for (const v of venues) {
+    minLon = Math.min(minLon, v.lon); maxLon = Math.max(maxLon, v.lon);
+    minLat = Math.min(minLat, v.lat); maxLat = Math.max(maxLat, v.lat);
+  }
+  map.fitBounds([[minLon, minLat], [maxLon, maxLat]], { padding: 70, maxZoom: 15, duration: 600 });
 }
 
 export function getMap() {
