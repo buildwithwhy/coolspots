@@ -327,6 +327,17 @@ main { position: fixed; inset: var(--topbar-h) 0 0 0; }
   .brand__name { display: none; }
   #btn-list .label, #btn-locate .label { display: none; }
 
+  /* let the autocomplete break out of the narrow search box and span
+     the topbar width so results are comfortably readable on phones */
+  .search { position: static; }
+  #search-suggest {
+    left: 10px; right: 10px;
+    top: calc(var(--topbar-h) + 4px);
+    max-height: 70vh;
+  }
+  .suggest-item { padding: 12px 12px; }
+  .suggest-item__meta { font-size: 13px; }
+
   #list-panel, #detail {
     left: 0; right: 0; bottom: 0;
     max-height: 72vh;
