@@ -7,7 +7,7 @@ Zero per-lookup API cost: all venue data is pre-computed into a static `venues.j
 ## Features
 - **Map + clustering** of ~21k venues, AC-status colour coding + legend
 - **Filters:** type, AC status (Cold / +Likely / all), open-now, hide-chains — all client-side
-- **Search** by name / postcode; **Find me** geolocation; distance-sorted viewport list
+- **Search** by venue name / postcode **or area** (type "Farringdon", "Shoreditch" → jump there); **Find me** geolocation; distance-sorted viewport list
 - **Detail panel:** AC consensus + vote tally, voting, tags, opening hours, directions, website
 - **Open now** computed from OSM `opening_hours` (via opening_hours.js), with a live badge
 - **Shareable links** — every venue has a `#v=<id>` deep link (Web Share / copy)
@@ -57,6 +57,13 @@ The script builds AC status in three layers, each overriding the last:
 3. **`data/ac-places-london.json`** — field-confirmed AC list *with coordinates*. Each entry is matched to a nearby OSM venue by proximity + fuzzy name and tagged in place; if no match is found within 200 m, it's added as a new venue (`source: "user"`). Museums are supported here as a venue type.
 
 Grow any of those files to expand the high-confidence "Cold"/"Likely" set.
+
+### Area search gazetteer
+`data/areas.json` powers "search by area" (jump to Farringdon, Shoreditch, …). Regenerate it from OSM place nodes:
+```bash
+node scripts/build-areas.mjs            # cached raw if present
+node scripts/build-areas.mjs --fresh    # refetch from Overpass
+```
 
 ## Enable the user layer (Supabase)
 1. Create a free project at [supabase.com](https://supabase.com).

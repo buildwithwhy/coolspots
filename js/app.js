@@ -33,6 +33,7 @@ const state = {
   currentId: null,
   filtered: [],
   aggCache: new Map(),
+  areas: [], // OSM gazetteer for area search (areas.json)
 };
 
 // ---------------------------------------------------------------------------
@@ -43,6 +44,11 @@ async function boot() {
     status.textContent = `${count.toLocaleString()} venues`;
     $('#data-date').textContent = generated ? `OSM data · ${generated}` : '';
     setTimeout(() => $('#load-pill').classList.add('hide'), 2500); // declutter once loaded
+    // load the area gazetteer for "search by area" (non-blocking, optional)
+    fetch('data/areas.json')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => { if (j?.areas) state.areas = j.areas; })
+      .catch(() => {});
   } catch (err) {
     status.textContent = 'Failed to load venue data';
     console.error(err);
@@ -427,7 +433,7 @@ function wireControls() {
 }
 
 // --- search + autocomplete --------------------------------------------------
-function buildSuggestions(q) {
+function buildVenueMatches(q) {
   q = q.toLowerCase();
   const starts = [];
   const incl = [];
@@ -438,7 +444,23 @@ function buildSuggestions(q) {
     else if (i > 0 && incl.length < 8) incl.push(v);
     if (starts.length >= 8) break;
   }
-  return (starts.length >= 8 ? starts : starts.concat(incl)).slice(0, 8);
+  return (starts.length >= 8 ? starts : starts.concat(incl)).slice(0, 6);
+}
+
+// area / neighbourhood matches (jump-to), from the OSM gazetteer in areas.json
+function buildAreaMatches(q) {
+  if (!state.areas.length) return [];
+  q = q.toLowerCase();
+  const starts = [];
+  const incl = [];
+  for (const a of state.areas) {
+    const n = a.name.toLowerCase();
+    const i = n.indexOf(q);
+    if (i === 0) starts.push(a);
+    else if (i > 0 && incl.length < 3) incl.push(a);
+    if (starts.length >= 3) break;
+  }
+  return (starts.length >= 3 ? starts : starts.concat(incl)).slice(0, 3);
 }
 
 function wireSearch() {
@@ -456,12 +478,20 @@ function wireSearch() {
   };
   closeAutocomplete = close;
 
-  const choose = (v) => {
-    input.value = v.name;
+  const choose = (item) => {
+    if (!item) return;
     state.filters.query = '';
-    refresh(); // clear the search-narrowing so the picked venue isn't isolated
-    close();
-    openDetail(v.id);
+    if (item.type === 'area') {
+      input.value = item.data.name;
+      refresh(); // show all venues again, then fly to the area
+      close();
+      MapView.flyToArea(item.data);
+    } else {
+      input.value = item.data.name;
+      refresh(); // clear search-narrowing so the picked venue isn't isolated
+      close();
+      openDetail(item.data.id);
+    }
   };
 
   const paintActive = () =>
@@ -469,13 +499,26 @@ function wireSearch() {
 
   const render = (q) => {
     if (!q) return close();
-    items = buildSuggestions(q);
+    // areas first (jump-to), then venues
+    const areas = buildAreaMatches(q).map((a) => ({ type: 'area', data: a }));
+    const venues = buildVenueMatches(q).map((v) => ({ type: 'venue', data: v }));
+    items = [...areas, ...venues];
     active = -1;
     if (!items.length) {
       box.innerHTML = '<li class="suggest-empty">No matches — tap ＋ to suggest a place.</li>';
     } else {
       box.innerHTML = items
-        .map((v, i) => {
+        .map((it, i) => {
+          if (it.type === 'area') {
+            const a = it.data;
+            return `<li class="suggest-item suggest-item--area" role="option" data-i="${i}">
+              <span class="suggest-pin">📍</span>
+              <div class="suggest-item__body">
+                <div class="suggest-item__name">${esc(a.name)}</div>
+                <div class="suggest-item__meta">${capitalize(a.kind)} · area</div>
+              </div></li>`;
+          }
+          const v = it.data;
           const k = v.ac?.status || 'unknown';
           return `<li class="suggest-item" role="option" data-i="${i}">
             <span class="dot" style="background:${AC_COLORS[k]}"></span>
@@ -519,9 +562,10 @@ function wireSearch() {
       e.preventDefault();
       active = Math.max(active - 1, 0);
       paintActive();
-    } else if (e.key === 'Enter' && active >= 0 && items[active]) {
+    } else if (e.key === 'Enter') {
+      if (!items.length) return;
       e.preventDefault();
-      choose(items[active]);
+      choose(active >= 0 ? items[active] : items[0]);
     } else if (e.key === 'Escape') {
       close();
     }

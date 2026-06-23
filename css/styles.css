@@ -71,6 +71,8 @@ body {
 }
 .suggest-item:hover, .suggest-item.active { background: #f0f9ff; }
 .suggest-item .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; box-shadow: 0 0 0 2px #fff; }
+.suggest-item--area { background: #f8fbff; }
+.suggest-pin { font-size: 15px; flex: none; width: 12px; text-align: center; }
 .suggest-item__body { flex: 1; min-width: 0; }
 .suggest-item__name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .suggest-item__meta { font-size: 12px; color: var(--muted); }

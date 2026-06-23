@@ -185,6 +185,12 @@ export function clearHighlight() {
   }
 }
 
+export function flyToArea(area) {
+  clearHighlight();
+  const wide = ['city', 'town', 'village', 'borough'].includes(area.kind);
+  map.flyTo({ center: [area.lon, area.lat], zoom: wide ? 13 : 14.5, speed: 1.3 });
+}
+
 export function resetView() {
   clearHighlight();
   map.flyTo({ center: LONDON_CENTER, zoom: DEFAULT_ZOOM, speed: 1.2 });
