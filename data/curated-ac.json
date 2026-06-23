@@ -1,0 +1,14 @@
+[
+  { "name": "Dishoom", "match": "contains", "status": "yes", "confidence": 0.85, "evidence": "Modern restaurant group, air-conditioned across sites" },
+  { "name": "Wagamama", "match": "contains", "status": "likely", "confidence": 0.7, "evidence": "Chain venues typically air-conditioned" },
+  { "name": "Flight Club", "match": "contains", "status": "yes", "confidence": 0.8, "evidence": "Large indoor entertainment venue, climate-controlled" },
+  { "name": "Honest Burgers", "match": "contains", "status": "likely", "confidence": 0.65, "evidence": "Chain venues typically air-conditioned" },
+  { "name": "Franco Manca", "match": "contains", "status": "likely", "confidence": 0.6, "evidence": "Chain venues typically air-conditioned" },
+  { "name": "Pizza Express", "match": "contains", "status": "likely", "confidence": 0.65, "evidence": "Chain venues typically air-conditioned" },
+  { "name": "PizzaExpress", "match": "contains", "status": "likely", "confidence": 0.65, "evidence": "Chain venues typically air-conditioned" },
+  { "name": "The Breakfast Club", "match": "contains", "status": "likely", "confidence": 0.6, "evidence": "Reported AC at several sites" },
+  { "name": "Brewdog", "match": "contains", "status": "likely", "confidence": 0.6, "evidence": "Modern craft-beer bars, often air-conditioned" },
+  { "name": "Nando's", "match": "contains", "status": "likely", "confidence": 0.65, "evidence": "Chain venues typically air-conditioned" },
+  { "name": "Wetherspoon", "match": "contains", "status": "likely", "confidence": 0.55, "evidence": "Many Wetherspoon pubs are air-conditioned" },
+  { "name": "Pret", "match": "contains", "status": "likely", "confidence": 0.6, "evidence": "Chain cafés typically air-conditioned" }
+]

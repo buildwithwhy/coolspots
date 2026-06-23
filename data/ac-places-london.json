@@ -1,0 +1,749 @@
+[
+  {
+    "name": "Fox on the Green",
+    "nb": "Angel",
+    "cat": "bar",
+    "address": "1 Islington Green, London N1 2XH",
+    "lat": 51.53673,
+    "lng": -0.10316,
+    "ac": "confirmed"
+  },
+  {
+    "name": "The Alpaca",
+    "nb": "Angel",
+    "cat": "bar",
+    "address": "84-86 Essex Road, London N1 8LU",
+    "lat": 51.53844,
+    "lng": -0.09899,
+    "ac": "confirmed"
+  },
+  {
+    "name": "The Breakfast Club Angel",
+    "nb": "Angel",
+    "cat": "cafe",
+    "address": "31 Camden Passage, N1 8EA",
+    "lat": 51.5354,
+    "lng": -0.1054,
+    "ac": "confirmed"
+  },
+  {
+    "name": "The Earl of Essex",
+    "nb": "Angel",
+    "cat": "bar",
+    "address": "25 Danbury Street, London N1 8LE",
+    "lat": 51.53386,
+    "lng": -0.09973,
+    "ac": "confirmed"
+  },
+  {
+    "name": "The Regent",
+    "nb": "Balham",
+    "cat": "bar",
+    "address": "21 Chestnut Grove, Balham, London SW12 8JB",
+    "lat": 51.443936,
+    "lng": -0.15417,
+    "ac": "confirmed"
+  },
+  {
+    "name": "Sager + Wilde",
+    "nb": "Bethnal Green",
+    "cat": "restaurant",
+    "address": "193 Hackney Road, E2 8JL",
+    "lat": 51.531048,
+    "lng": -0.072127,
+    "ac": "confirmed"
+  },
+  {
+    "name": "V&A Museum of Childhood",
+    "nb": "Bethnal Green",
+    "cat": "museum",
+    "address": "Cambridge Heath Road, E2 9PA",
+    "lat": 51.5271,
+    "lng": -0.0584,
+    "ac": "confirmed"
+  },
+  {
+    "name": "The George Inn",
+    "nb": "Borough",
+    "cat": "bar",
+    "address": "77 Borough High Street, SE1 1NH",
+    "lat": 51.504,
+    "lng": -0.0893,
+    "ac": "confirmed"
+  },
+  {
+    "name": "Jazz Cafe",
+    "nb": "Camden",
+    "cat": "bar",
+    "address": "5 Parkway, NW1 7PG",
+    "lat": 51.5387,
+    "lng": -0.1414,
+    "ac": "confirmed"
+  },
+  {
+    "name": "Corner Corner",
+    "nb": "Canada Water",
+    "cat": "bar",
+    "address": "Maritime Street, Canada Water, SE16 7LL",
+    "lat": 51.49632,
+    "lng": -0.04771,
+    "ac": "confirmed"
+  },
+  {
+    "name": "Leadbelly's Bar & Kitchen",
+    "nb": "Canada Water",
+    "cat": "bar",
+    "address": "Montreal House, Deal Porter Square, SE16 7AQ",
+    "lat": 51.49824,
+    "lng": -0.04871,
+    "ac": "confirmed"
+  },
+  {
+    "name": "Sen Vietnamese",
+    "nb": "Canada Water",
+    "cat": "restaurant",
+    "address": "190 Lower Road, London SE16 2UN",
+    "lat": 51.49204,
+    "lng": -0.04536,
+    "ac": "confirmed"
+  },
+  {
+    "name": "Notes Coffee",
+    "nb": "Canary Wharf",
+    "cat": "cafe",
+    "address": "Crossrail Place, E14 5AR",
+    "lat": 51.5053,
+    "lng": -0.0183,
+    "ac": "confirmed"
+  },
+  {
+    "name": "The Lock Tavern",
+    "nb": "Chalk Farm",
+    "cat": "bar",
+    "address": "35 Chalk Farm Road, NW1 8AJ",
+    "lat": 51.542,
+    "lng": -0.1477,
+    "ac": "confirmed"
+  },
+  {
+    "name": "The Lock Tavern",
+    "nb": "Chalk Farm",
+    "cat": "bar",
+    "address": "35 Chalk Farm Road, NW1 8AJ",
+    "lat": 51.5413,
+    "lng": -0.1498,
+    "ac": "confirmed"
+  },
+  {
+    "name": "La Trompette",
+    "nb": "Chiswick",
+    "cat": "restaurant",
+    "address": "5-7 Devonshire Road, W4 2EU",
+    "lat": 51.49189,
+    "lng": -0.25609,
+    "ac": "confirmed"
+  },
+  {
+    "name": "The Old Pack Horse",
+    "nb": "Chiswick",
+    "cat": "bar",
+    "address": "434 Chiswick High Road, W4 5TF",
+    "lat": 51.492879,
+    "lng": -0.266635,
+    "ac": "confirmed"
+  },
+  {
+    "name": "The Clapham North",
+    "nb": "Clapham North",
+    "cat": "bar",
+    "address": "409 Clapham Road, SW9 9BT",
+    "lat": 51.4645,
+    "lng": -0.1308,
+    "ac": "confirmed"
+  },
+  {
+    "name": "The Landor Space",
+    "nb": "Clapham North",
+    "cat": "bar",
+    "address": "70 Landor Road, SW9 9PH",
+    "lat": 51.4641,
+    "lng": -0.1255,
+    "ac": "confirmed"
+  },
+  {
+    "name": "The Windmill on the Common",
+    "nb": "Clapham North",
+    "cat": "bar",
+    "address": "Clapham Common South Side, SW4 9DE",
+    "lat": 51.457605,
+    "lng": -0.14418,
+    "ac": "confirmed"
+  },
+  {
+    "name": "The Lexington",
+    "nb": "Clerkenwell",
+    "cat": "bar",
+    "address": "96-98 Pentonville Road, N1 9JB",
+    "lat": 51.5303,
+    "lng": -0.1078,
+    "ac": "confirmed"
+  },
+  {
+    "name": "Blue Legume",
+    "nb": "Crouch End",
+    "cat": "cafe",
+    "address": "130 Crouch Hill, Crouch End, London N8 9DY",
+    "lat": 51.577614,
+    "lng": -0.123149,
+    "ac": "confirmed"
+  },
+  {
+    "name": "Jolene",
+    "nb": "Dalston",
+    "cat": "restaurant",
+    "address": "21 Newington Green, N16 9PU",
+    "lat": 51.5506,
+    "lng": -0.0852,
+    "ac": "confirmed"
+  },
+  {
+    "name": "Marcella",
+    "nb": "Deptford",
+    "cat": "restaurant",
+    "address": "165A Deptford High Street, SE8 3NU",
+    "lat": 51.479574,
+    "lng": -0.026282,
+    "ac": "confirmed"
+  },
+  {
+    "name": "The Crown & Greyhound",
+    "nb": "Dulwich",
+    "cat": "bar",
+    "address": "73 Dulwich Village, SE21 7BJ",
+    "lat": 51.4461,
+    "lng": -0.0828,
+    "ac": "confirmed"
+  },
+  {
+    "name": "Imperial War Museum",
+    "nb": "Elephant & Castle",
+    "cat": "museum",
+    "address": "Lambeth Road, SE1 6HZ",
+    "lat": 51.4958,
+    "lng": -0.1086,
+    "ac": "confirmed"
+  },
+  {
+    "name": "Harwood Arms",
+    "nb": "Fulham",
+    "cat": "restaurant",
+    "address": "Walham Grove, SW6 1QP",
+    "lat": 51.482915,
+    "lng": -0.196488,
+    "ac": "confirmed"
+  },
+  {
+    "name": "Myrtle",
+    "nb": "Fulham",
+    "cat": "restaurant",
+    "address": "1a Langton Street, SW10 0JL",
+    "lat": 51.482112,
+    "lng": -0.180576,
+    "ac": "confirmed"
+  },
+  {
+    "name": "Goddards at Greenwich",
+    "nb": "Greenwich",
+    "cat": "restaurant",
+    "address": "22 King William Walk, Greenwich, SE10 9HU",
+    "lat": 51.481403,
+    "lng": -0.008374,
+    "ac": "confirmed"
+  },
+  {
+    "name": "Royal Observatory Greenwich",
+    "nb": "Greenwich",
+    "cat": "museum",
+    "address": "Blackheath Avenue, SE10 8XJ",
+    "lat": 51.4769,
+    "lng": -0.0005,
+    "ac": "confirmed"
+  },
+  {
+    "name": "Number 90",
+    "nb": "Hackney Wick",
+    "cat": "restaurant",
+    "address": "90 Main Yard, E9 5LN",
+    "lat": 51.546,
+    "lng": -0.0235,
+    "ac": "confirmed"
+  },
+  {
+    "name": "The Lord Napier Star",
+    "nb": "Hackney Wick",
+    "cat": "bar",
+    "address": "25 White Post Lane, E9 5ER",
+    "lat": 51.5462,
+    "lng": -0.0245,
+    "ac": "confirmed"
+  },
+  {
+    "name": "Kenwood House",
+    "nb": "Hampstead",
+    "cat": "museum",
+    "address": "Hampstead Lane, NW3 7JR",
+    "lat": 51.5712,
+    "lng": -0.1671,
+    "ac": "confirmed"
+  },
+  {
+    "name": "Villa Bianca",
+    "nb": "Hampstead",
+    "cat": "restaurant",
+    "address": "1 Perrins Court, NW3 1QS",
+    "lat": 51.5565,
+    "lng": -0.1775,
+    "ac": "confirmed"
+  },
+  {
+    "name": "The Half Moon",
+    "nb": "Herne Hill",
+    "cat": "bar",
+    "address": "10 Half Moon Lane, SE24 9HU",
+    "lat": 51.45265,
+    "lng": -0.100722,
+    "ac": "confirmed"
+  },
+  {
+    "name": "The Highbury Barn Tavern",
+    "nb": "Highbury",
+    "cat": "bar",
+    "address": "26 Highbury Park, N5 2AA",
+    "lat": 51.5558,
+    "lng": -0.0988,
+    "ac": "confirmed"
+  },
+  {
+    "name": "Famous Cock Tavern",
+    "nb": "Islington",
+    "cat": "bar",
+    "address": "259 Upper Street, London N1 1RU",
+    "lat": 51.54603,
+    "lng": -0.10346,
+    "ac": "confirmed"
+  },
+  {
+    "name": "The Scarsdale Tavern",
+    "nb": "Kensington",
+    "cat": "bar",
+    "address": "23a Edwardes Square, W8 6HE",
+    "lat": 51.4964,
+    "lng": -0.199,
+    "ac": "confirmed"
+  },
+  {
+    "name": "The Wallace Collection",
+    "nb": "Marylebone",
+    "cat": "museum",
+    "address": "Hertford House, Manchester Square, W1U 3BN",
+    "lat": 51.5173,
+    "lng": -0.153,
+    "ac": "confirmed"
+  },
+  {
+    "name": "Daylesford Organic",
+    "nb": "Notting Hill",
+    "cat": "cafe",
+    "address": "208-212 Westbourne Grove, W11 2RH",
+    "lat": 51.5155,
+    "lng": -0.1993,
+    "ac": "confirmed"
+  },
+  {
+    "name": "The Sun in Splendour",
+    "nb": "Notting Hill",
+    "cat": "bar",
+    "address": "7 Portobello Road, W11 3DA",
+    "lat": 51.510967,
+    "lng": -0.19783,
+    "ac": "confirmed"
+  },
+  {
+    "name": "Peckham Levels",
+    "nb": "Peckham",
+    "cat": "restaurant",
+    "address": "95A Rye Lane, SE15 4ST",
+    "lat": 51.4729,
+    "lng": -0.0691,
+    "ac": "confirmed"
+  },
+  {
+    "name": "The Spencer",
+    "nb": "Putney",
+    "cat": "bar",
+    "address": "237 Lower Richmond Road, SW15 1HJ",
+    "lat": 51.468273,
+    "lng": -0.228091,
+    "ac": "confirmed"
+  },
+  {
+    "name": "The Roebuck",
+    "nb": "Richmond",
+    "cat": "bar",
+    "address": "130 Richmond Hill, TW10 6RN",
+    "lat": 51.453,
+    "lng": -0.294,
+    "ac": "confirmed"
+  },
+  {
+    "name": "Dishoom Shoreditch",
+    "nb": "Shoreditch",
+    "cat": "restaurant",
+    "address": "7 Boundary Street, E2 7JE",
+    "lat": 51.5249,
+    "lng": -0.0768,
+    "ac": "confirmed"
+  },
+  {
+    "name": "Ozone Coffee Roasters",
+    "nb": "Shoreditch",
+    "cat": "cafe",
+    "address": "11 Leonard Street, EC2A 4AQ",
+    "lat": 51.5255,
+    "lng": -0.0843,
+    "ac": "confirmed"
+  },
+  {
+    "name": "BrewDog Waterloo",
+    "nb": "South Bank",
+    "cat": "bar",
+    "address": "Unit G, Waterloo Station, 1 The Sidings, London SE1 7BH",
+    "lat": 51.5023,
+    "lng": -0.11537,
+    "ac": "confirmed"
+  },
+  {
+    "name": "Gail's St John's Wood",
+    "nb": "St John",
+    "cat": "cafe",
+    "address": "5 Circus Road, St John's Wood, NW8 6NX",
+    "lat": 51.533703,
+    "lng": -0.171682,
+    "ac": "confirmed"
+  },
+  {
+    "name": "The Three Crowns",
+    "nb": "Stoke Newington",
+    "cat": "bar",
+    "address": "175 Stoke Newington High Street, London N16 0PE",
+    "lat": 51.562083,
+    "lng": -0.073837,
+    "ac": "confirmed"
+  },
+  {
+    "name": "The Castle",
+    "nb": "Tooting",
+    "cat": "bar",
+    "address": "38 Tooting High Street, SW17 0RG",
+    "lat": 51.4275,
+    "lng": -0.1675,
+    "ac": "confirmed"
+  },
+  {
+    "name": "The Alma",
+    "nb": "Wandsworth",
+    "cat": "bar",
+    "address": "499 Old York Road, SW18 1TF",
+    "lat": 51.460739,
+    "lng": -0.187698,
+    "ac": "confirmed"
+  },
+  {
+    "name": "Circus West Village",
+    "nb": "Battersea",
+    "cat": "restaurant",
+    "address": "Circus West Village, SW11 8AL",
+    "lat": 51.481,
+    "lng": -0.148,
+    "ac": "likely"
+  },
+  {
+    "name": "The Latchmere",
+    "nb": "Battersea",
+    "cat": "bar",
+    "address": "503 Battersea Park Road, SW11 3BW",
+    "lat": 51.472049,
+    "lng": -0.165436,
+    "ac": "likely"
+  },
+  {
+    "name": "WatchHouse Battersea",
+    "nb": "Battersea",
+    "cat": "cafe",
+    "address": "52 Electric Boulevard, London SW11 8BJ",
+    "lat": 51.479587,
+    "lng": -0.144172,
+    "ac": "likely"
+  },
+  {
+    "name": "White Cube Bermondsey",
+    "nb": "Bermondsey",
+    "cat": "museum",
+    "address": "144-152 Bermondsey Street, SE1 3TQ",
+    "lat": 51.4978,
+    "lng": -0.0806,
+    "ac": "likely"
+  },
+  {
+    "name": "The Hare & Billet",
+    "nb": "Blackheath",
+    "cat": "bar",
+    "address": "1A Hare & Billet Road, SE3 0QJ",
+    "lat": 51.466,
+    "lng": 0.0078,
+    "ac": "likely"
+  },
+  {
+    "name": "Bokan",
+    "nb": "Canary Wharf",
+    "cat": "bar",
+    "address": "40 Marsh Wall, E14 9TP",
+    "lat": 51.5013,
+    "lng": -0.0188,
+    "ac": "likely"
+  },
+  {
+    "name": "Dishoom Canary Wharf",
+    "nb": "Canary Wharf",
+    "cat": "restaurant",
+    "address": "13 Water Street, London E14 5GX",
+    "lat": 51.503124,
+    "lng": -0.013569,
+    "ac": "likely"
+  },
+  {
+    "name": "Grind Canary Wharf",
+    "nb": "Canary Wharf",
+    "cat": "cafe",
+    "address": "Market Halls, 25 North Colonnade, London E14 5HD (or Cabot Place, 15 Cabot Square, E14 4QS)",
+    "lat": 51.505249,
+    "lng": -0.020215,
+    "ac": "likely"
+  },
+  {
+    "name": "Aquum",
+    "nb": "Clapham North",
+    "cat": "bar",
+    "address": "68 Clapham High Street, SW4 7UL",
+    "lat": 51.4627,
+    "lng": -0.1387,
+    "ac": "likely"
+  },
+  {
+    "name": "Redemption Roasters",
+    "nb": "Clerkenwell",
+    "cat": "cafe",
+    "address": "84 Lamb's Conduit Street, WC1N 3LR",
+    "lat": 51.523,
+    "lng": -0.1145,
+    "ac": "likely"
+  },
+  {
+    "name": "The Dog & Bell",
+    "nb": "Deptford",
+    "cat": "bar",
+    "address": "116 Prince Street, SE8 3JD",
+    "lat": 51.483355,
+    "lng": -0.025839,
+    "ac": "likely"
+  },
+  {
+    "name": "Dulwich Picture Gallery",
+    "nb": "Dulwich",
+    "cat": "museum",
+    "address": "Gallery Road, SE21 7AD",
+    "lat": 51.4455,
+    "lng": -0.0858,
+    "ac": "likely"
+  },
+  {
+    "name": "Gail's East Dulwich",
+    "nb": "East Dulwich",
+    "cat": "cafe",
+    "address": "1 Zenoria St, East Dulwich, SE22 8HP",
+    "lat": 51.460245,
+    "lng": -0.075584,
+    "ac": "likely"
+  },
+  {
+    "name": "The Rockingham Arms",
+    "nb": "Elephant & Castle",
+    "cat": "bar",
+    "address": "Metro Central Heights, 119 Newington Causeway, SE1 6BN",
+    "lat": 51.49532,
+    "lng": -0.098704,
+    "ac": "likely"
+  },
+  {
+    "name": "Horniman Museum & Gardens",
+    "nb": "Forest Hill",
+    "cat": "museum",
+    "address": "100 London Road, SE23 3PQ",
+    "lat": 51.4407,
+    "lng": -0.0608,
+    "ac": "likely"
+  },
+  {
+    "name": "The Breakfast Club Hackney Wick",
+    "nb": "Hackney Wick",
+    "cat": "cafe",
+    "address": "29 East Bay Lane, Canalside, Here East, Queen Elizabeth Olympic Park, London E15 2GW",
+    "lat": 51.547334,
+    "lng": -0.024635,
+    "ac": "likely"
+  },
+  {
+    "name": "The Blue Boat",
+    "nb": "Hammersmith",
+    "cat": "bar",
+    "address": "Distillery Wharf, Parr's Way, London W6 9GD",
+    "lat": 51.487277,
+    "lng": -0.226365,
+    "ac": "likely"
+  },
+  {
+    "name": "Ninh's Vietnamese Restaurant",
+    "nb": "Highbury",
+    "cat": "restaurant",
+    "address": "82 Highbury Park, London N5 2XE",
+    "lat": 51.55726,
+    "lng": -0.09793,
+    "ac": "likely"
+  },
+  {
+    "name": "Trullo",
+    "nb": "Highbury",
+    "cat": "restaurant",
+    "address": "300-302 St Paul's Road, London N1 2LH",
+    "lat": 51.54627,
+    "lng": -0.10157,
+    "ac": "likely"
+  },
+  {
+    "name": "Ottolenghi",
+    "nb": "Islington",
+    "cat": "restaurant",
+    "address": "287 Upper Street, N1 2TZ",
+    "lat": 51.53975,
+    "lng": -0.102293,
+    "ac": "likely"
+  },
+  {
+    "name": "Off Broadway",
+    "nb": "London Fields",
+    "cat": "bar",
+    "address": "63-65 Broadway Market, E8 4PH",
+    "lat": 51.538,
+    "lng": -0.0608,
+    "ac": "likely"
+  },
+  {
+    "name": "The Golden Hind",
+    "nb": "Marylebone",
+    "cat": "restaurant",
+    "address": "73 Marylebone Lane, W1U 2PN",
+    "lat": 51.5179,
+    "lng": -0.151,
+    "ac": "likely"
+  },
+  {
+    "name": "The Ledbury",
+    "nb": "Notting Hill",
+    "cat": "restaurant",
+    "address": "127 Ledbury Road, W11 2AQ",
+    "lat": 51.5157,
+    "lng": -0.2002,
+    "ac": "likely"
+  },
+  {
+    "name": "Michael Nadra Primrose Hill",
+    "nb": "Primrose Hill",
+    "cat": "restaurant",
+    "address": "42 Gloucester Avenue, NW1 8JD",
+    "lat": 51.540132,
+    "lng": -0.150427,
+    "ac": "likely"
+  },
+  {
+    "name": "The Watch House",
+    "nb": "Rotherhithe",
+    "cat": "cafe",
+    "address": "69 St Marychurch Street, London SE16 4HZ",
+    "lat": 51.501002,
+    "lng": -0.054062,
+    "ac": "likely"
+  },
+  {
+    "name": "Soutine",
+    "nb": "St John",
+    "cat": "cafe",
+    "address": "60 St John's Wood High Street, NW8 7SH",
+    "lat": 51.532239,
+    "lng": -0.168905,
+    "ac": "likely"
+  },
+  {
+    "name": "The Ivy Cafe St John's Wood",
+    "nb": "St John",
+    "cat": "restaurant",
+    "address": "120 St John's Wood High Street, NW8 7SG",
+    "lat": 51.5335,
+    "lng": -0.1744,
+    "ac": "likely"
+  },
+  {
+    "name": "The Tap East",
+    "nb": "Stratford",
+    "cat": "bar",
+    "address": "Westfield Stratford City, E20 1GL",
+    "lat": 51.543,
+    "lng": -0.0066,
+    "ac": "likely"
+  },
+  {
+    "name": "Lahore Karahi",
+    "nb": "Tooting",
+    "cat": "restaurant",
+    "address": "1 Tooting High Street, SW17 0SN",
+    "lat": 51.4263,
+    "lng": -0.168,
+    "ac": "likely"
+  },
+  {
+    "name": "Chez Bruce",
+    "nb": "Wandsworth",
+    "cat": "restaurant",
+    "address": "2 Bellevue Road, SW17 7EG",
+    "lat": 51.446004,
+    "lng": -0.165647,
+    "ac": "likely"
+  },
+  {
+    "name": "Nando's Southfields",
+    "nb": "Wandsworth",
+    "cat": "restaurant",
+    "address": "Unit 12, Southside Shopping Centre, Garratt Lane, Wandsworth, London SW18 4TF",
+    "lat": 51.455883,
+    "lng": -0.192786,
+    "ac": "likely"
+  },
+  {
+    "name": "Sticks'n'Sushi Wimbledon",
+    "nb": "Wimbledon",
+    "cat": "restaurant",
+    "address": "58 Wimbledon Hill Road, London, SW19 7PA",
+    "lat": 51.422522,
+    "lng": -0.209515,
+    "ac": "likely"
+  }
+]

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0284c7" />
+    <title>Cool Spots London — find the air conditioning</title>
+    <meta name="description" content="Map of London pubs, cafés and restaurants with air conditioning. Find the cold spot near you." />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4/dist/maplibre-gl.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <!-- top bar -->
+    <header id="topbar">
+      <div class="brand">
+        <span class="brand__mark">❄️</span>
+        <span class="brand__name">Cool Spots <span>London</span></span>
+      </div>
+      <div class="search">
+        <input id="search" type="search" placeholder="Search name or postcode…" autocomplete="off" />
+      </div>
+      <div class="topbar__actions">
+        <button id="btn-locate" class="pill" title="Find me">
+          <span class="pin-ico">◎</span><span class="label"> Find me</span>
+        </button>
+        <button id="btn-filters" class="pill">Filters</button>
+        <button id="btn-list" class="pill">List</button>
+      </div>
+    </header>
+
+    <!-- filters -->
+    <aside id="filters">
+      <div class="filters__group">
+        <h4>Type</h4>
+        <label><input type="checkbox" data-type="pub" checked /> Pub</label>
+        <label><input type="checkbox" data-type="bar" checked /> Bar</label>
+        <label><input type="checkbox" data-type="cafe" checked /> Café</label>
+        <label><input type="checkbox" data-type="restaurant" checked /> Restaurant</label>
+        <label><input type="checkbox" data-type="museum" checked /> Museum</label>
+      </div>
+      <div class="filters__group">
+        <h4>Air conditioning</h4>
+        <label><input type="radio" name="ac" value="cold" /> Cold only</label>
+        <label><input type="radio" name="ac" value="likely" /> Include likely</label>
+        <label><input type="radio" name="ac" value="all" checked /> Show all</label>
+      </div>
+      <div class="filters__group">
+        <h4>Options</h4>
+        <label><input type="checkbox" id="open-now" /> Open now</label>
+        <label><input type="checkbox" id="hide-chains" /> Hide chains</label>
+      </div>
+      <button id="btn-suggest" class="pill pill--accent">＋ Suggest a place</button>
+      <div class="filters__foot">
+        <span id="result-count">—</span>
+        <span id="data-date" class="muted"></span>
+      </div>
+    </aside>
+
+    <!-- map -->
+    <main>
+      <div id="map"></div>
+
+      <!-- legend doubles as the AC colour key -->
+      <div id="legend">
+        <span><i style="background:#0284c7"></i>Cold</span>
+        <span><i style="background:#14b8a6"></i>Likely</span>
+        <span><i style="background:#94a3b8"></i>Unknown</span>
+        <span><i style="background:#f59e0b"></i>No AC</span>
+      </div>
+
+      <div id="load-pill"><span id="load-status">Loading…</span></div>
+    </main>
+
+    <!-- list panel / bottom sheet -->
+    <section id="list-panel">
+      <div class="panel-head">
+        <div class="panel-head__grip"></div>
+        <h3>Nearby <span id="list-count" class="muted"></span></h3>
+        <button id="list-close" class="icon-btn" aria-label="Close">✕</button>
+      </div>
+      <ul id="list"></ul>
+    </section>
+
+    <!-- detail panel / bottom sheet -->
+    <section id="detail">
+      <div class="panel-head__grip"></div>
+      <div id="detail-body"></div>
+    </section>
+
+    <p id="supabase-note" hidden>
+      Voting &amp; tagging are read-only until Supabase is configured — see README.
+    </p>
+
+    <!-- suggest-a-place modal -->
+    <div id="suggest-backdrop" hidden>
+      <div id="suggest-modal" role="dialog" aria-modal="true" aria-labelledby="suggest-title">
+        <div class="modal-head">
+          <h3 id="suggest-title">Suggest a place</h3>
+          <button id="suggest-close" class="icon-btn" aria-label="Close">✕</button>
+        </div>
+        <form id="suggest-form">
+          <label>Name<input name="name" required maxlength="120" placeholder="The Cool Arms" /></label>
+          <label>Type
+            <select name="type" required>
+              <option value="pub">Pub</option>
+              <option value="bar">Bar</option>
+              <option value="cafe">Café</option>
+              <option value="restaurant">Restaurant</option>
+              <option value="museum">Museum</option>
+            </select>
+          </label>
+          <label>Address <span class="muted">(optional)</span><input name="address" maxlength="200" placeholder="12 Example Street, SE1 2AB" /></label>
+          <label>How cold is it? <span class="muted">(optional)</span>
+            <select name="ac_hint">
+              <option value="">—</option>
+              <option value="cold">❄️ Proper AC, actually cold</option>
+              <option value="mild">🌬️ Has AC but mild</option>
+              <option value="none">🔥 No AC</option>
+              <option value="unsure">🤷 Not sure</option>
+            </select>
+          </label>
+          <label>Note <span class="muted">(optional)</span><textarea name="note" maxlength="280" rows="2" placeholder="Anything useful for moderators…"></textarea></label>
+          <label class="check-row"><input type="checkbox" name="useloc" /> Use the current map centre as its location</label>
+          <button type="submit" class="pill pill--accent" id="suggest-submit">Submit suggestion</button>
+          <p id="suggest-status" class="muted"></p>
+        </form>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4/dist/maplibre-gl.js"></script>
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>
