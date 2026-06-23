@@ -264,13 +264,18 @@ function mergeAcPlaces(venues, places) {
   const newVenues = [];
 
   for (const p of uniq.values()) {
-    // nearest existing venue within 200 m that also matches by name
+    // Find the existing venue this AC entry refers to:
+    //  - a fuzzy name match within 200 m, OR
+    //  - an EXACT name match within 500 m (handles imprecise source coordinates,
+    //    e.g. The Roebuck listed ~300 m off its real OSM location).
     let best = null;
     let bestDist = Infinity;
+    const pName = normaliseName(p.name, p.nb);
     for (const v of venues) {
       const d = haversineMeters(p.lat, p.lng, v.lat, v.lon);
-      if (d > 200) continue;
-      if (d < bestDist && namesMatch(v.name, p)) {
+      if (d > 500) continue;
+      const match = (d <= 200 && namesMatch(v.name, p)) || normaliseName(v.name) === pName;
+      if (match && d < bestDist) {
         best = v;
         bestDist = d;
       }
@@ -318,6 +323,83 @@ function mergeAcPlaces(venues, places) {
   return { tagged, added };
 }
 
+// --- dedupe near-identical venues --------------------------------------------
+// OSM often holds a node + a way for the same place, and the AC overlay can add
+// a variant-named twin. Collapse venues that are very close AND have similar
+// names, keeping a stable OSM id but the best available AC status.
+function normName(s) {
+  return s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim();
+}
+const NAME_STOP = new Set(['the', 'bar', 'cafe', 'café', 'kitchen', 'restaurant', 'pub', 'co', 'ltd', 'london', 'and']);
+function similarNames(a, b) {
+  const na = normName(a), nb = normName(b);
+  if (!na || !nb) return false;
+  const ca = na.replace(/ /g, ''), cb = nb.replace(/ /g, '');
+  if (ca === cb) return true;
+  if (ca.length >= 5 && (ca.includes(cb) || cb.includes(ca))) return true;
+  const ta = new Set(na.split(' ').filter((w) => w.length > 1 && !NAME_STOP.has(w)));
+  const tb = new Set(nb.split(' ').filter((w) => w.length > 1 && !NAME_STOP.has(w)));
+  if (!ta.size || !tb.size) return false;
+  let shared = 0;
+  for (const t of tb) if (ta.has(t)) shared++;
+  return shared / (ta.size + tb.size - shared) >= 0.6;
+}
+function acRank(v) {
+  const { status, source } = v.ac;
+  if (source === 'user') return 5;
+  if (source === 'curated') return 4;
+  if (status === 'yes' || status === 'no') return 3; // explicit OSM tag
+  if (status === 'likely') return 2;
+  return 0; // unknown
+}
+function survivorScore(v) {
+  const osm = /^(node|way|relation)\//.test(v.id) ? 1 : 0;
+  return osm * 1000 + acRank(v) * 10 + (v.ac.confidence || 0);
+}
+function dedupe(venues) {
+  const CELL = 0.0015; // ~150 m grid
+  const MAX_M = 75; // merge twins within 75 m
+  const grid = new Map();
+  const gkey = (lat, lon) => `${Math.floor(lat / CELL)},${Math.floor(lon / CELL)}`;
+  for (const v of venues) {
+    const k = gkey(v.lat, v.lon);
+    let arr = grid.get(k);
+    if (!arr) grid.set(k, (arr = []));
+    arr.push(v);
+  }
+  const removed = new Set();
+  let merged = 0;
+  for (const v of venues) {
+    if (removed.has(v.id)) continue;
+    const group = [v];
+    const ci = Math.floor(v.lat / CELL), cj = Math.floor(v.lon / CELL);
+    for (let di = -1; di <= 1; di++)
+      for (let dj = -1; dj <= 1; dj++) {
+        const arr = grid.get(`${ci + di},${cj + dj}`);
+        if (!arr) continue;
+        for (const w of arr) {
+          if (w === v || removed.has(w.id) || group.includes(w)) continue;
+          if (haversineMeters(v.lat, v.lon, w.lat, w.lon) <= MAX_M && similarNames(v.name, w.name)) {
+            group.push(w);
+          }
+        }
+      }
+    if (group.length < 2) continue;
+    group.sort((a, b) => survivorScore(b) - survivorScore(a));
+    const keep = group[0];
+    for (let i = 1; i < group.length; i++) {
+      const drop = group[i];
+      if (acRank(drop) > acRank(keep)) keep.ac = drop.ac; // take the better AC
+      for (const f of ['address', 'postcode', 'website', 'opening_hours', 'cuisine']) {
+        if (!keep[f] && drop[f]) keep[f] = drop[f]; // fill gaps
+      }
+      removed.add(drop.id);
+      merged++;
+    }
+  }
+  return { venues: venues.filter((v) => !removed.has(v.id)), merged };
+}
+
 // --- main ---------------------------------------------------------------------
 async function main() {
   const bbox = parseArgs();
@@ -327,7 +409,7 @@ async function main() {
   const elements = raw.elements || [];
 
   const seen = new Set();
-  const venues = [];
+  let venues = [];
   for (const el of elements) {
     const v = transform(el);
     if (!v || seen.has(v.id)) continue;
@@ -340,6 +422,10 @@ async function main() {
 
   const acPlaces = await loadAcPlaces();
   const merged = mergeAcPlaces(venues, acPlaces);
+
+  const beforeDedup = venues.length;
+  const deduped = dedupe(venues);
+  venues = deduped.venues;
 
   venues.sort((a, b) => a.name.localeCompare(b.name));
 
@@ -360,6 +446,7 @@ async function main() {
   console.log(`\n✓ wrote ${venues.length} venues → ${path}`);
   console.log(`  curated overlay applied to ${curatedApplied} venue(s)`);
   console.log(`  AC field data: tagged ${merged.tagged} existing, added ${merged.added} new venue(s)`);
+  console.log(`  dedupe: merged ${deduped.merged} near-duplicate(s) (${beforeDedup} → ${venues.length})`);
   console.log(`  AC status tally:`, tally);
 }
 

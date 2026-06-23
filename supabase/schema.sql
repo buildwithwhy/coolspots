@@ -61,3 +61,19 @@ alter table public.venue_suggestions enable row level security;
 -- Moderate from the Supabase dashboard (set status approved/rejected).
 create policy "venue_suggestions insert" on public.venue_suggestions
   for insert with check (true);
+
+-- ---------- P2: app feedback / contact ----------
+create table if not exists public.app_feedback (
+  id         uuid primary key default gen_random_uuid(),
+  message    text not null,
+  email      text,
+  anon_id    text,
+  status     text not null default 'new' check (status in ('new','read','done')),
+  created_at timestamptz not null default now()
+);
+
+alter table public.app_feedback enable row level security;
+
+-- Anonymous users may send feedback, but NOT read it. Read it in the dashboard.
+create policy "app_feedback insert" on public.app_feedback
+  for insert with check (true);

@@ -38,7 +38,10 @@ body {
   border-bottom: 1px solid var(--line);
   z-index: 30;
 }
-.brand { display: flex; align-items: center; gap: 7px; font-weight: 800; letter-spacing: -0.02em; }
+.brand { display: flex; align-items: center; gap: 7px; font-weight: 800; letter-spacing: -0.02em;
+  background: none; border: none; padding: 4px 6px; margin-left: -6px; border-radius: 10px;
+  color: inherit; font-family: inherit; cursor: pointer; }
+.brand:hover { background: #f0f9ff; }
 .brand__mark { font-size: 20px; }
 .brand__name { font-size: 16px; white-space: nowrap; }
 .brand__name span { color: var(--cool); }
@@ -99,7 +102,7 @@ main { position: fixed; inset: var(--topbar-h) 0 0 0; }
 #legend {
   position: absolute;
   left: 10px;
-  bottom: calc(14px + var(--safe-b));
+  top: 10px;
   display: flex;
   flex-wrap: wrap;
   gap: 4px 12px;
@@ -116,20 +119,20 @@ main { position: fixed; inset: var(--topbar-h) 0 0 0; }
 #legend i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
 
 #fab-suggest {
-  position: absolute; right: 10px; bottom: 92px; z-index: 11;
-  display: flex; align-items: center; gap: 8px;
-  height: 48px; padding: 0 18px;
+  position: absolute; right: 10px; top: 10px; z-index: 12;
+  display: flex; align-items: center; gap: 6px;
+  height: 38px; padding: 0 14px;
   background: var(--cool); color: #fff; border: none; border-radius: 999px;
-  font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: var(--shadow);
+  font-size: 14px; font-weight: 700; cursor: pointer; box-shadow: var(--shadow);
   transition: background 0.15s, transform 0.1s;
 }
 #fab-suggest:hover { background: var(--cool-deep); }
 #fab-suggest:active { transform: scale(0.96); }
-#fab-suggest .fab-ico { font-size: 22px; line-height: 1; }
+#fab-suggest .fab-ico { font-size: 18px; line-height: 1; }
 @media (max-width: 720px) {
-  #fab-suggest { width: 52px; padding: 0; justify-content: center; bottom: 84px; }
+  #fab-suggest { width: 40px; height: 40px; padding: 0; justify-content: center; }
   #fab-suggest .fab-label { display: none; }
-  #fab-suggest .fab-ico { font-size: 26px; }
+  #fab-suggest .fab-ico { font-size: 22px; }
 }
 
 #load-pill {
@@ -146,7 +149,9 @@ main { position: fixed; inset: var(--topbar-h) 0 0 0; }
   color: var(--muted);
   box-shadow: var(--shadow);
   z-index: 10;
+  transition: opacity 0.5s;
 }
+#load-pill.hide { opacity: 0; pointer-events: none; }
 
 /* map pins */
 .user-pin { position: relative; width: 18px; height: 18px; }
@@ -276,30 +281,36 @@ main { position: fixed; inset: var(--topbar-h) 0 0 0; }
 }
 .pill--accent:hover { background: var(--cool-deep); border-color: var(--cool-deep); }
 
-#suggest-backdrop {
+#suggest-backdrop, #about-backdrop {
   position: fixed; inset: 0; z-index: 60;
   background: rgba(15, 23, 42, 0.45); backdrop-filter: blur(2px);
   display: flex; align-items: center; justify-content: center; padding: 16px;
 }
 /* the [hidden] attribute alone loses to the #id rule above — override explicitly */
-#suggest-backdrop[hidden] { display: none; }
-#suggest-modal {
+#suggest-backdrop[hidden], #about-backdrop[hidden] { display: none; }
+#suggest-modal, #about-modal {
   background: var(--card); width: 100%; max-width: 440px; max-height: 90vh; overflow-y: auto;
   border-radius: var(--radius); box-shadow: var(--shadow);
 }
 .modal-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 16px 8px; }
 .modal-head h3 { margin: 0; font-size: 18px; }
-#suggest-form { display: flex; flex-direction: column; gap: 12px; padding: 4px 16px 18px; }
-#suggest-form label { display: flex; flex-direction: column; gap: 5px; font-size: 14px; font-weight: 600; }
-#suggest-form input, #suggest-form select, #suggest-form textarea {
+.modal-body { padding: 0 16px 18px; }
+.modal-body p { margin: 0 0 12px; font-size: 15px; line-height: 1.45; }
+.modal-body h4 { margin: 18px 0 10px; font-size: 15px; }
+#suggest-form, #feedback-form { display: flex; flex-direction: column; gap: 12px; padding: 4px 16px 18px; }
+.modal-body #feedback-form { padding: 0; }
+#suggest-form label, #feedback-form label { display: flex; flex-direction: column; gap: 5px; font-size: 14px; font-weight: 600; }
+#suggest-form input, #suggest-form select, #suggest-form textarea,
+#feedback-form input, #feedback-form textarea {
   font: inherit; font-weight: 400; padding: 10px 12px; border: 1px solid var(--line);
   border-radius: 10px; background: #f8fafc; outline: none;
 }
-#suggest-form input:focus, #suggest-form select:focus, #suggest-form textarea:focus { border-color: var(--cool); background: #fff; }
-#suggest-form textarea { resize: vertical; }
+#suggest-form :focus, #feedback-form :focus { border-color: var(--cool); background: #fff; }
+#suggest-form textarea, #feedback-form textarea { resize: vertical; }
 #suggest-form .check-row { flex-direction: row; align-items: center; gap: 9px; font-weight: 500; }
 #suggest-form .check-row input { width: 17px; height: 17px; accent-color: var(--cool); }
-#suggest-status { margin: 0; min-height: 1em; }
+#suggest-status, #feedback-status { margin: 0; min-height: 1em; }
+#about-suggest { width: 100%; }
 
 #toast {
   position: fixed; left: 50%; bottom: 80px; transform: translateX(-50%) translateY(20px);

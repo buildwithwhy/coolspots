@@ -18,6 +18,7 @@ import {
   addTag,
   getLocalVote,
   submitSuggestion,
+  submitFeedback,
 } from './supabase.js';
 import { openLabel, prewarm as prewarmOpenHours } from './openhours.js';
 import { AC_LABELS, AC_COLORS, TAG_OPTIONS } from './config.js';
@@ -41,6 +42,7 @@ async function boot() {
     const { count, generated } = await loadVenues();
     status.textContent = `${count.toLocaleString()} venues`;
     $('#data-date').textContent = generated ? `OSM data · ${generated}` : '';
+    setTimeout(() => $('#load-pill').classList.add('hide'), 2500); // declutter once loaded
   } catch (err) {
     status.textContent = 'Failed to load venue data';
     console.error(err);
@@ -374,6 +376,18 @@ function wireControls() {
     refresh();
   });
 
+  // about / contact (brand button)
+  $('#brand').addEventListener('click', openAbout);
+  $('#about-close').addEventListener('click', closeAbout);
+  $('#about-backdrop').addEventListener('click', (e) => {
+    if (e.target.id === 'about-backdrop') closeAbout();
+  });
+  $('#about-suggest').addEventListener('click', () => {
+    closeAbout();
+    openSuggest();
+  });
+  $('#feedback-form').addEventListener('submit', onFeedbackSubmit);
+
   // suggest a place (floating button)
   $('#fab-suggest').addEventListener('click', openSuggest);
   $('#suggest-close').addEventListener('click', closeSuggest);
@@ -396,7 +410,8 @@ function wireControls() {
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
     closeAutocomplete();
-    if (!$('#suggest-backdrop').hidden) closeSuggest();
+    if (!$('#about-backdrop').hidden) closeAbout();
+    else if (!$('#suggest-backdrop').hidden) closeSuggest();
     else if ($('#filters').classList.contains('open')) $('#filters').classList.remove('open');
     else if ($('#detail').classList.contains('open')) closeDetail();
   });
@@ -540,6 +555,42 @@ function locate() {
 function markUserLayerDisabled() {
   const note = $('#supabase-note');
   if (note) note.hidden = false;
+}
+
+// --- about / contact --------------------------------------------------------
+function openAbout() {
+  $('#feedback-status').textContent = supabaseEnabled ? '' : 'Note: needs Supabase configured to send.';
+  $('#about-backdrop').hidden = false;
+}
+function closeAbout() {
+  $('#about-backdrop').hidden = true;
+}
+async function onFeedbackSubmit(e) {
+  e.preventDefault();
+  const form = e.target;
+  const btn = $('#feedback-submit');
+  const status = $('#feedback-status');
+  const data = Object.fromEntries(new FormData(form));
+  const message = (data.message || '').trim();
+  if (!message) return;
+
+  btn.disabled = true;
+  status.textContent = 'Sending…';
+  try {
+    const res = await submitFeedback({ message, email: (data.email || '').trim() });
+    if (res.offline) {
+      status.textContent = 'Supabase not configured — message not sent.';
+    } else {
+      form.reset();
+      closeAbout();
+      toast('Thanks for the feedback!');
+    }
+  } catch (err) {
+    console.warn('feedback failed', err);
+    status.textContent = 'Could not send — please try again.';
+  } finally {
+    btn.disabled = false;
+  }
 }
 
 // --- suggest a place --------------------------------------------------------

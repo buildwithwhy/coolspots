@@ -12,10 +12,10 @@
   <body>
     <!-- top bar -->
     <header id="topbar">
-      <div class="brand">
+      <button id="brand" class="brand" title="About &amp; contact">
         <span class="brand__mark">❄️</span>
         <span class="brand__name">Cool Spots <span>London</span></span>
-      </div>
+      </button>
       <div class="search">
         <input id="search" type="search" placeholder="Search name or postcode…" autocomplete="off"
           role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="search-suggest" />
@@ -95,6 +95,28 @@
     <p id="supabase-note" hidden>
       Voting &amp; tagging are read-only until Supabase is configured — see README.
     </p>
+
+    <!-- about / contact modal -->
+    <div id="about-backdrop" hidden>
+      <div id="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-title">
+        <div class="modal-head">
+          <h3 id="about-title">❄️ Cool Spots London</h3>
+          <button id="about-close" class="icon-btn" aria-label="Close">✕</button>
+        </div>
+        <div class="modal-body">
+          <p>Find London pubs, bars, cafés, restaurants &amp; museums with <strong>air conditioning</strong>. Crowd-sourced — vote on whether a place is actually cold, and add tags.</p>
+          <p class="muted">Venue data © OpenStreetMap contributors. Map tiles by OpenFreeMap. No Google data is used.</p>
+          <button id="about-suggest" class="pill pill--accent">＋ Suggest a place</button>
+          <h4>Get in touch</h4>
+          <form id="feedback-form">
+            <label>Your message<textarea name="message" required maxlength="1000" rows="3" placeholder="Found a bug, an idea, a venue that's wrong…"></textarea></label>
+            <label>Email <span class="muted">(optional, if you'd like a reply)</span><input name="email" type="email" maxlength="160" placeholder="you@example.com" /></label>
+            <button type="submit" class="pill pill--accent" id="feedback-submit">Send feedback</button>
+            <p id="feedback-status" class="muted"></p>
+          </form>
+        </div>
+      </div>
+    </div>
 
     <!-- suggest-a-place modal -->
     <div id="suggest-backdrop" hidden>

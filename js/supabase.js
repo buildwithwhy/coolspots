@@ -95,6 +95,19 @@ export async function submitSuggestion(payload) {
   return { offline: false };
 }
 
+// P2: send app feedback / contact message.
+export async function submitFeedback({ message, email }) {
+  const c = db();
+  if (!c) return { offline: true };
+  const { error } = await c.from('app_feedback').insert({
+    message,
+    email: email || null,
+    anon_id: getAnonId(),
+  });
+  if (error) throw error;
+  return { offline: false };
+}
+
 export async function addTag(venueId, tag) {
   const c = db();
   if (!c) return { offline: true };
