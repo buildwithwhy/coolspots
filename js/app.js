@@ -114,6 +114,7 @@ function updateList() {
   const frag = document.createDocumentFragment();
   for (const { v, d } of withDist.slice(0, LIST_LIMIT)) {
     const key = v.ac?.status || 'unknown';
+    const dir = mapLinks(v)[0]; // device-default map app
     const li = document.createElement('li');
     li.className = 'list-item';
     li.dataset.id = v.id;
@@ -125,8 +126,13 @@ function updateList() {
       v.postcode ? ' · ' + esc(v.postcode) : ''
     }</div>
       </div>
-      <span class="list-item__dist">${formatDistance(d)}</span>`;
-    li.addEventListener('click', () => openDetail(v.id));
+      <span class="list-item__dist">${formatDistance(d)}</span>
+      <a class="list-item__dir" href="${dir.url}" target="_blank" rel="noopener"
+         title="Directions (${dir.label})" aria-label="Directions to ${esc(v.name)}">↗</a>`;
+    li.addEventListener('click', (e) => {
+      if (e.target.closest('.list-item__dir')) return; // let the directions link through
+      openDetail(v.id);
+    });
     frag.appendChild(li);
   }
   ul.appendChild(frag);

@@ -229,6 +229,13 @@ main { position: fixed; inset: var(--topbar-h) 0 0 0; }
 .list-item__name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .list-item__meta { font-size: 13px; color: var(--muted); }
 .list-item__dist { font-size: 13px; font-weight: 700; color: var(--cool); white-space: nowrap; }
+.list-item__dir {
+  flex: none; width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: #f0f9ff; border: 1px solid #bae6fd; color: var(--cool-deep);
+  font-size: 16px; font-weight: 700; text-decoration: none;
+}
+.list-item__dir:hover { background: #e0f2fe; border-color: var(--cool); }
 .list-empty { padding: 24px 16px; text-align: center; color: var(--muted); }
 
 /* detail */
