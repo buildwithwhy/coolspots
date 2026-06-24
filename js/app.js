@@ -3,6 +3,7 @@
 import {
   loadVenues,
   allVenues,
+  addSuggestedVenues,
   filterVenues,
   toGeoJSON,
   getVenue,
@@ -19,6 +20,7 @@ import {
   getLocalVote,
   submitSuggestion,
   submitFeedback,
+  fetchApprovedSuggestions,
 } from './supabase.js';
 import { openLabel, prewarm as prewarmOpenHours } from './openhours.js';
 import { AC_LABELS, AC_COLORS, TAG_OPTIONS } from './config.js';
@@ -65,7 +67,51 @@ async function boot() {
   wireControls();
   window.addEventListener('hashchange', openFromHash);
   prewarmOpenHours(allVenues()); // warm "open now" cache during idle
+  if (supabaseEnabled) loadApprovedSuggestions(); // live moderated-suggestion overlay
   if (!supabaseEnabled) markUserLayerDisabled();
+}
+
+// --- live suggestion overlay ------------------------------------------------
+function suggestionToVenue(s) {
+  const acMap = {
+    cold: { status: 'likely', confidence: 0.55 },
+    mild: { status: 'likely', confidence: 0.5 },
+    none: { status: 'no', confidence: 0.5 },
+    unsure: { status: 'unknown', confidence: 0.3 },
+  };
+  const m = acMap[s.ac_hint] || { status: 'unknown', confidence: 0.3 };
+  const type = ['pub', 'bar', 'cafe', 'restaurant', 'museum'].includes(s.type) ? s.type : 'restaurant';
+  return {
+    id: 'suggestion/' + s.id,
+    name: s.name,
+    type,
+    lat: s.lat,
+    lon: s.lon,
+    address: s.address || null,
+    postcode: null,
+    website: null,
+    opening_hours: null,
+    cuisine: null,
+    chain: false,
+    ac: {
+      status: m.status,
+      source: 'suggested',
+      confidence: m.confidence,
+      evidence: 'Community-suggested' + (s.note ? ` — ${s.note}` : ''),
+    },
+  };
+}
+
+async function loadApprovedSuggestions() {
+  try {
+    const rows = await fetchApprovedSuggestions();
+    if (!rows.length) return;
+    const venues = rows.map(suggestionToVenue).filter((v) => v.lat != null && v.lon != null);
+    const added = addSuggestedVenues(venues);
+    if (added) MapView.onReady(refresh); // re-render once they're merged in
+  } catch (e) {
+    console.warn('suggestion overlay failed', e);
+  }
 }
 
 // shareable links: open the venue named in the URL hash (#v=node/123)

@@ -19,6 +19,33 @@ export async function loadVenues() {
 export function allVenues() {
   return all;
 }
+
+// Merge live "approved suggestion" venues on top of the static set, skipping any
+// that duplicate an existing venue (within ~120 m + similar name). Returns count added.
+function similarName(a, b) {
+  const n = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '');
+  const na = n(a);
+  const nb = n(b);
+  return !!na && !!nb && (na === nb || (na.length >= 5 && (na.includes(nb) || nb.includes(na))));
+}
+export function addSuggestedVenues(list) {
+  let added = 0;
+  for (const v of list) {
+    if (v.lat == null || v.lon == null || byId.has(v.id)) continue;
+    const dup = all.some(
+      (e) =>
+        Math.abs(e.lat - v.lat) < 0.0015 &&
+        Math.abs(e.lon - v.lon) < 0.0015 &&
+        haversineMeters({ lat: e.lat, lon: e.lon }, { lat: v.lat, lon: v.lon }) <= 120 &&
+        similarName(e.name, v.name)
+    );
+    if (dup) continue;
+    all.push(v);
+    byId.set(v.id, v);
+    added++;
+  }
+  return added;
+}
 export function getVenue(id) {
   return byId.get(id);
 }

@@ -95,6 +95,23 @@ export async function submitSuggestion(payload) {
   return { offline: false };
 }
 
+// Approved venue suggestions — a live overlay on the static map.
+// Only rows you've set status='approved' are readable (see RLS in schema.sql),
+// so moderation = flipping status in the dashboard; no redeploy needed.
+export async function fetchApprovedSuggestions() {
+  const c = db();
+  if (!c) return [];
+  const { data, error } = await c
+    .from('venue_suggestions')
+    .select('id,name,type,address,lat,lon,ac_hint,note')
+    .eq('status', 'approved');
+  if (error) {
+    console.warn('approved suggestions read failed', error.message);
+    return [];
+  }
+  return data || [];
+}
+
 // P2: send app feedback / contact message.
 export async function submitFeedback({ message, email }) {
   const c = db();

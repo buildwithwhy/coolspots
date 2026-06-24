@@ -763,5 +763,23 @@
     "lat": 51.504644,
     "lng": -0.014697,
     "ac": "confirmed"
+  },
+  {
+    "name": "Sunday in Brooklyn",
+    "nb": "Marylebone",
+    "cat": "restaurant",
+    "address": "10-12 James Street, London W1U 1EE",
+    "lat": 51.514608,
+    "lng": -0.150165,
+    "ac": "likely"
+  },
+  {
+    "name": "BrainStation",
+    "nb": "Shoreditch",
+    "cat": "cafe",
+    "address": "55-57 Rivington Street, London EC2A 3QQ",
+    "lat": 51.52608,
+    "lng": -0.08043,
+    "ac": "likely"
   }
 ]

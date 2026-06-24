@@ -57,10 +57,15 @@ create table if not exists public.venue_suggestions (
 
 alter table public.venue_suggestions enable row level security;
 
--- Anonymous users may submit suggestions, but NOT read the queue.
+-- Anonymous users may submit suggestions, but NOT read the pending queue.
 -- Moderate from the Supabase dashboard (set status approved/rejected).
 create policy "venue_suggestions insert" on public.venue_suggestions
   for insert with check (true);
+
+-- Live overlay: expose ONLY approved suggestions for the app to read & show on
+-- the map. Pending/rejected stay private. Approving = set status='approved'.
+create policy "venue_suggestions read approved" on public.venue_suggestions
+  for select using (status = 'approved');
 
 -- ---------- P2: app feedback / contact ----------
 create table if not exists public.app_feedback (
