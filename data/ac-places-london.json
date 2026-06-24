@@ -754,5 +754,14 @@
     "lat": 51.497675,
     "lng": -0.047354,
     "ac": "confirmed"
+  },
+  {
+    "name": "BrewDog Canary Wharf",
+    "nb": "Canary Wharf",
+    "cat": "bar",
+    "address": "2 Churchill Place, London E14 5RB",
+    "lat": 51.504644,
+    "lng": -0.014697,
+    "ac": "confirmed"
   }
 ]
