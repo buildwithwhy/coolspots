@@ -745,5 +745,14 @@
     "lat": 51.422522,
     "lng": -0.209515,
     "ac": "likely"
+  },
+  {
+    "name": "Bellucci Cafe",
+    "nb": "Canada Water",
+    "cat": "cafe",
+    "address": "Decathlon, Surrey Quays Road, London SE16 7LL",
+    "lat": 51.497675,
+    "lng": -0.047354,
+    "ac": "confirmed"
   }
 ]
