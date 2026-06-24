@@ -400,6 +400,39 @@ function dedupe(venues) {
   return { venues: venues.filter((v) => !removed.has(v.id)), merged };
 }
 
+// --- manual overrides (applied last) -----------------------------------------
+// Corrections keyed by OSM id for things the automatic overlays can't express
+// (rebrands/renames, chain/cuisine/website fixes). Applied after dedupe so they
+// land on the surviving venue and always win — keeps venues.json reproducible.
+async function loadOverrides() {
+  try {
+    const raw = await readFile(join(ROOT, 'data', 'venue-overrides.json'), 'utf8');
+    return JSON.parse(raw).overrides || [];
+  } catch {
+    return [];
+  }
+}
+
+function applyOverrides(venues, overrides) {
+  if (!overrides.length) return { applied: 0, missing: [] };
+  const byId = new Map(venues.map((v) => [v.id, v]));
+  let applied = 0;
+  const missing = [];
+  for (const o of overrides) {
+    const v = byId.get(o.id);
+    if (!v) {
+      missing.push(o.id);
+      continue;
+    }
+    for (const [key, val] of Object.entries(o.set || {})) {
+      if (key === 'ac' && val && typeof val === 'object') v.ac = { ...v.ac, ...val };
+      else v[key] = val;
+    }
+    applied++;
+  }
+  return { applied, missing };
+}
+
 // --- main ---------------------------------------------------------------------
 async function main() {
   const bbox = parseArgs();
@@ -427,6 +460,9 @@ async function main() {
   const deduped = dedupe(venues);
   venues = deduped.venues;
 
+  const overrides = await loadOverrides();
+  const ov = applyOverrides(venues, overrides);
+
   venues.sort((a, b) => a.name.localeCompare(b.name));
 
   const tally = venues.reduce((acc, v) => {
@@ -447,6 +483,7 @@ async function main() {
   console.log(`  curated overlay applied to ${curatedApplied} venue(s)`);
   console.log(`  AC field data: tagged ${merged.tagged} existing, added ${merged.added} new venue(s)`);
   console.log(`  dedupe: merged ${deduped.merged} near-duplicate(s) (${beforeDedup} → ${venues.length})`);
+  console.log(`  overrides: applied ${ov.applied}${ov.missing.length ? `, MISSING ids: ${ov.missing.join(', ')}` : ''}`);
   console.log(`  AC status tally:`, tally);
 }
 

@@ -58,6 +58,8 @@ The script builds AC status in three layers, each overriding the last:
 
 Grow any of those files to expand the high-confidence "Cold"/"Likely" set.
 
+**`data/venue-overrides.json`** is applied *last* (after dedupe), keyed by OSM id. Use it for corrections the overlays above can't express — rebrands/renames, chain/cuisine/website fixes — so manual edits survive a rebuild instead of being overwritten by OSM. Each entry is `{ "id": "node/123", "set": { ...fields } }`; an `ac` object is merged, other keys overwrite. (Example: Chai Ki → Din Tai Fung.)
+
 ### Area search gazetteer
 `data/areas.json` powers "search by area" (jump to Farringdon, Shoreditch, …). Regenerate it from OSM place nodes:
 ```bash

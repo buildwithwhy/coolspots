@@ -1,0 +1,21 @@
+{
+  "_note": "Manual venue corrections, keyed by OSM id, applied LAST in the pipeline (after OSM transform, curation, AC overlay, and dedupe). Use this for rebrands/renames and any field the automatic overlays can't express, so corrections survive a `build-venues.mjs` rebuild. Each entry: { id, set: { ...fields } }; an `ac` object is merged, other keys overwrite.",
+  "overrides": [
+    {
+      "id": "node/7182075442",
+      "set": {
+        "name": "Din Tai Fung Canary Wharf",
+        "chain": true,
+        "cuisine": "chinese",
+        "website": "https://dintaifung.co.uk/",
+        "opening_hours": null,
+        "ac": {
+          "status": "yes",
+          "source": "user",
+          "confidence": 0.95,
+          "evidence": "Field-confirmed AC (confirmed) — Canary Wharf; rebranded from Chai Ki to Din Tai Fung"
+        }
+      }
+    }
+  ]
+}
