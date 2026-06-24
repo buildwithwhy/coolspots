@@ -8,6 +8,7 @@
     "build:venues": "node scripts/build-venues.mjs",
     "build:areas": "node scripts/build-areas.mjs",
     "build:icons": "node scripts/build-icons.mjs",
+    "moderate": "node scripts/moderate.mjs",
     "serve": "python3 -m http.server 8123"
   },
   "devDependencies": {

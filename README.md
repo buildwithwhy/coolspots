@@ -90,6 +90,21 @@ node scripts/build-areas.mjs --fresh    # refetch from Overpass
 - **≥ 3 votes:** community consensus from the modal vote, with the tally.
 - **otherwise:** the curated/OSM status, labelled "Listed".
 
+### Moderating suggestions (local CLI)
+The `venue_suggestions` queue isn't publicly readable, and Supabase blocks the
+secret key in browsers — so moderation is a small local CLI that uses your
+**secret** key (server-side; never commit or deploy it):
+```bash
+export SUPABASE_SECRET=sb_secret_xxx     # Supabase → Settings → API Keys
+npm run moderate                          # list the pending queue
+npm run moderate -- --all                 # everything, grouped by status
+node scripts/moderate.mjs approve <id>    # → live on the map (overlay)
+node scripts/moderate.mjs added   <id>    # → curated into the dataset (kept as record)
+node scripts/moderate.mjs reject  <id>    # → declined
+```
+Each entry prints name/type/AC-hint/address/note + a map link to eyeball the
+location. `<id>` can be just the first few characters.
+
 ## Deploy
 It's static — drop the folder on Cloudflare Pages, Vercel, Netlify, or GitHub Pages. No build command needed (output dir = repo root).
 
