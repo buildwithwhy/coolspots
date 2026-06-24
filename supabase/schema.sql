@@ -51,8 +51,12 @@ create table if not exists public.venue_suggestions (
   ac_hint    text check (ac_hint in ('cold','mild','none','unsure')),
   note       text,
   anon_id    text,
-  status     text not null default 'pending' check (status in ('pending','approved','rejected')),
-  created_at timestamptz not null default now()
+  -- lifecycle: pending → approved (live via overlay) | added (curated into the
+  -- static dataset; kept as a record, NOT re-shown by the overlay) | rejected
+  status      text not null default 'pending'
+              check (status in ('pending','approved','added','rejected')),
+  reviewed_at timestamptz,
+  created_at  timestamptz not null default now()
 );
 
 alter table public.venue_suggestions enable row level security;
