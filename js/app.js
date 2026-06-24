@@ -28,6 +28,7 @@ import { AC_LABELS, AC_COLORS, TAG_OPTIONS } from './config.js';
 const $ = (sel) => document.querySelector(sel);
 const LIST_LIMIT = 80;
 let closeAutocomplete = () => {}; // set by wireSearch, called on Escape
+let deferredPrompt = null; // captured beforeinstallprompt event (Android/Chrome)
 
 const state = {
   filters: { types: new Set(['pub', 'bar', 'cafe', 'restaurant', 'museum']), ac: 'all', hideChains: false, openNow: false, query: '' },
@@ -69,6 +70,23 @@ async function boot() {
   prewarmOpenHours(allVenues()); // warm "open now" cache during idle
   if (supabaseEnabled) loadApprovedSuggestions(); // live moderated-suggestion overlay
   if (!supabaseEnabled) markUserLayerDisabled();
+
+  // PWA: register service worker (enables install + offline)
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch((err) => console.warn('SW registration failed', err));
+  }
+  // capture Android/Chrome install prompt for our own button
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+  });
+  window.addEventListener('appinstalled', () => {
+    deferredPrompt = null;
+  });
+}
+
+function isStandalone() {
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 }
 
 // --- live suggestion overlay ------------------------------------------------
@@ -449,6 +467,13 @@ function wireControls() {
     closeAbout();
     openSuggest();
   });
+  $('#about-install').addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    closeAbout();
+  });
   $('#feedback-form').addEventListener('submit', onFeedbackSubmit);
 
   // suggest a place (floating button)
@@ -682,7 +707,35 @@ function goHome() {
 // --- about / contact --------------------------------------------------------
 function openAbout() {
   $('#feedback-status').textContent = supabaseEnabled ? '' : 'Note: needs Supabase configured to send.';
+  updateInstallUI();
   $('#about-backdrop').hidden = false;
+}
+
+// Show the right "add to home screen" affordance for the device.
+function updateInstallUI() {
+  const block = $('#install-block');
+  const btn = $('#about-install');
+  const hint = $('#install-hint');
+  if (isStandalone()) {
+    block.hidden = true; // already installed
+    return;
+  }
+  block.hidden = false;
+  const ua = navigator.userAgent || '';
+  const isIOS = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  if (deferredPrompt) {
+    // Android / desktop Chrome: real one-tap install
+    btn.hidden = false;
+    hint.hidden = true;
+  } else if (isIOS) {
+    btn.hidden = true;
+    hint.hidden = false;
+    hint.textContent = 'On iPhone/iPad: tap the Share icon, then “Add to Home Screen”.';
+  } else {
+    btn.hidden = true;
+    hint.hidden = false;
+    hint.textContent = 'In your browser menu, choose “Install app” / “Add to Home Screen”.';
+  }
 }
 function closeAbout() {
   $('#about-backdrop').hidden = true;

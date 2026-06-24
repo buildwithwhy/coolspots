@@ -12,6 +12,7 @@ Zero per-lookup API cost: all venue data is pre-computed into a static `venues.j
 - **Open now** computed from OSM `opening_hours` (via opening_hours.js), with a live badge
 - **Shareable links** — every venue has a `#v=<id>` deep link (Web Share / copy)
 - **Suggest a place** — submits to a Supabase moderation queue; suggestions you **approve** in the dashboard appear **live** on the map (no redeploy) via an overlay merged on top of the static data
+- **Installable (PWA)** — manifest + service worker make it addable to a phone home screen, with an "Add to Home Screen" prompt in the About sheet and offline-capable app shell. Regenerate icons with `npm run build:icons`.
 
 ## Stack
 - **Map:** [MapLibre GL JS](https://maplibre.org/) (no key) — loaded from CDN

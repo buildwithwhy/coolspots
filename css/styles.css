@@ -332,7 +332,9 @@ main { position: fixed; inset: var(--topbar-h) 0 0 0; }
 #suggest-form .check-row { flex-direction: row; align-items: center; gap: 9px; font-weight: 500; }
 #suggest-form .check-row input { width: 17px; height: 17px; accent-color: var(--cool); }
 #suggest-status, #feedback-status { margin: 0; min-height: 1em; }
-#about-suggest { width: 100%; }
+#about-suggest, #about-install { width: 100%; }
+#install-block { margin-bottom: 4px; }
+#install-hint { margin: 8px 0 0; }
 
 #toast {
   position: fixed; left: 50%; bottom: 80px; transform: translateX(-50%) translateY(20px);
