@@ -8,7 +8,7 @@ Zero per-lookup API cost: all venue data is pre-computed into a static `venues.j
 - **Map + clustering** of ~21k venues, AC-status colour coding + legend
 - **Filters:** type, AC status (Cold / +Likely / all), open-now, hide-chains — all client-side
 - **Search** by venue name / postcode **or area** (type "Farringdon", "Shoreditch" → jump there); **Find me** geolocation; distance-sorted viewport list
-- **Detail panel:** AC consensus + vote tally, voting, tags, opening hours, directions, website
+- **Detail panel:** AC consensus + vote tally, voting, tags, opening hours, website, and **directions** that deep-link to the user's own map app (Apple Maps / Google Maps / Citymapper / OpenStreetMap) — plain URLs, no map API, no cost
 - **Open now** computed from OSM `opening_hours` (via opening_hours.js), with a live badge
 - **Shareable links** — every venue has a `#v=<id>` deep link (Web Share / copy)
 - **Suggest a place** — submits to a Supabase moderation queue

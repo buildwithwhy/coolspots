@@ -182,9 +182,13 @@ async function openDetail(id) {
     ${v.address || v.postcode ? `<div class="detail-row">📍 ${esc([v.address, v.postcode].filter(Boolean).join(', '))}</div>` : ''}
     ${v.opening_hours ? `<div class="detail-row">🕑 ${esc(v.opening_hours)}</div>` : ''}
     ${v.website ? `<div class="detail-row">🔗 <a href="${esc(v.website)}" target="_blank" rel="noopener">Website</a></div>` : ''}
-    <div class="detail-row">
-      <a class="link-btn" target="_blank" rel="noopener"
-         href="https://www.openstreetmap.org/directions?to=${v.lat}%2C${v.lon}">↗ Directions</a>
+    <div class="detail-row directions-row">
+      <span class="directions-label">↗ Directions</span>
+      <div class="map-links">
+        ${mapLinks(v)
+          .map((l) => `<a class="map-link" target="_blank" rel="noopener" href="${l.url}">${l.label}</a>`)
+          .join('')}
+      </div>
     </div>
 
     <div class="vote-block">
@@ -709,6 +713,21 @@ async function onSuggestSubmit(e) {
   } finally {
     submitBtn.disabled = false;
   }
+}
+
+// --- directions: deep links to the user's map app (no API, no cost) ---------
+function mapLinks(v) {
+  const { lat, lon } = v;
+  const name = encodeURIComponent(v.name);
+  const apple = { label: 'Apple Maps', url: `https://maps.apple.com/?daddr=${lat},${lon}&q=${name}` };
+  const google = { label: 'Google Maps', url: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}` };
+  const citymapper = { label: 'Citymapper', url: `https://citymapper.com/directions?endcoord=${lat},${lon}&endname=${name}` };
+  const osm = { label: 'OpenStreetMap', url: `https://www.openstreetmap.org/directions?to=${lat}%2C${lon}` };
+
+  const ua = navigator.userAgent || '';
+  const isApple = /iPhone|iPad|iPod|Macintosh/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  // device default first, then the others (Citymapper always offered — it's London)
+  return isApple ? [apple, google, citymapper, osm] : [google, apple, citymapper, osm];
 }
 
 // --- utils ------------------------------------------------------------------

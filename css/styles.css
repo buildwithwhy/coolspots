@@ -244,6 +244,18 @@ main { position: fixed; inset: var(--topbar-h) 0 0 0; }
 .detail-row a { color: var(--cool-deep); }
 .link-btn { display: inline-block; font-weight: 700; text-decoration: none; }
 
+/* directions: open-in-your-map chips */
+.directions-row { display: flex; flex-direction: column; gap: 8px; }
+.directions-label { font-weight: 700; }
+.map-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.map-link {
+  display: inline-block; padding: 7px 12px; border-radius: 999px;
+  border: 1px solid var(--line); background: #f8fafc;
+  font-size: 14px; font-weight: 600; text-decoration: none; color: var(--cool-deep) !important;
+}
+.map-link:hover { border-color: var(--cool); background: #f0f9ff; }
+.map-link:first-child { background: #e0f2fe; border-color: #bae6fd; }
+
 .vote-block, .tag-block { margin-top: 20px; }
 .vote-block h3, .tag-block h3 { margin: 0 0 10px; font-size: 15px; }
 .vote-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
