@@ -6,7 +6,13 @@
     {
       "source": "/data/venues.json",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=3600, stale-while-revalidate=604800" }
+        { "key": "Cache-Control", "value": "public, max-age=60, stale-while-revalidate=604800" }
+      ]
+    },
+    {
+      "source": "/data/(areas|ac-places-london)\\.json",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=60, stale-while-revalidate=604800" }
       ]
     },
     {
