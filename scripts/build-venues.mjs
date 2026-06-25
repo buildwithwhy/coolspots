@@ -304,7 +304,7 @@ function mergeAcPlaces(venues, places) {
       newVenues.push({
         id: `user/${slug(p.name)}-${slug(p.nb)}`,
         name: p.name,
-        type: ['pub', 'bar', 'cafe', 'restaurant', 'museum'].includes(p.cat) ? p.cat : 'restaurant',
+        type: ['pub', 'bar', 'cafe', 'restaurant', 'museum', 'public'].includes(p.cat) ? p.cat : 'restaurant',
         lat: Number(p.lat.toFixed(6)),
         lon: Number(p.lng.toFixed(6)),
         address: addr,

@@ -16,6 +16,26 @@
           "evidence": "Field-confirmed AC (confirmed) — Canary Wharf; rebranded from Chai Ki to Din Tai Fung"
         }
       }
+    },
+    {
+      "id": "node/1913487611",
+      "set": {
+        "name": "British Library",
+        "type": "public",
+        "cuisine": null,
+        "ac": {
+          "status": "yes",
+          "source": "user",
+          "confidence": 0.95,
+          "evidence": "Field-confirmed AC (confirmed) — free public space, Euston Road"
+        }
+      }
+    },
+    {
+      "id": "node/360045160",
+      "set": {
+        "opening_hours": "Mo,Tu 11:00-24:00; We,Th 11:00-01:00; Fr 11:00-03:00; Sa 10:00-02:00; Su 10:00-23:00"
+      }
     }
   ]
 }

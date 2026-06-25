@@ -23,7 +23,7 @@ import {
   fetchApprovedSuggestions,
 } from './supabase.js';
 import { openLabel, prewarm as prewarmOpenHours } from './openhours.js';
-import { AC_LABELS, AC_COLORS, TAG_OPTIONS } from './config.js';
+import { AC_LABELS, AC_COLORS, TAG_OPTIONS, TYPE_LABELS } from './config.js';
 
 const $ = (sel) => document.querySelector(sel);
 const LIST_LIMIT = 80;
@@ -31,7 +31,7 @@ let closeAutocomplete = () => {}; // set by wireSearch, called on Escape
 let deferredPrompt = null; // captured beforeinstallprompt event (Android/Chrome)
 
 const state = {
-  filters: { types: new Set(['pub', 'bar', 'cafe', 'restaurant', 'museum']), ac: 'all', hideChains: false, openNow: false, query: '' },
+  filters: { types: new Set(['pub', 'bar', 'cafe', 'restaurant', 'museum', 'public']), ac: 'all', hideChains: false, openNow: false, query: '' },
   userLocation: null,
   currentId: null,
   filtered: [],
@@ -98,7 +98,7 @@ function suggestionToVenue(s) {
     unsure: { status: 'unknown', confidence: 0.3 },
   };
   const m = acMap[s.ac_hint] || { status: 'unknown', confidence: 0.3 };
-  const type = ['pub', 'bar', 'cafe', 'restaurant', 'museum'].includes(s.type) ? s.type : 'restaurant';
+  const type = ['pub', 'bar', 'cafe', 'restaurant', 'museum', 'public'].includes(s.type) ? s.type : 'restaurant';
   return {
     id: 'suggestion/' + s.id,
     name: s.name,
@@ -186,7 +186,7 @@ function updateList() {
       <span class="dot" style="background:${AC_COLORS[key]}"></span>
       <div class="list-item__body">
         <div class="list-item__name">${esc(v.name)}</div>
-        <div class="list-item__meta">${capitalize(v.type)} · ${AC_LABELS[key]}${
+        <div class="list-item__meta">${typeLabel(v.type)} · ${AC_LABELS[key]}${
       v.postcode ? ' · ' + esc(v.postcode) : ''
     }</div>
       </div>
@@ -230,7 +230,7 @@ async function openDetail(id) {
     <div class="detail-head">
       <div>
         <h2 id="detail-name">${esc(v.name)}</h2>
-        <div class="detail-sub">${capitalize(v.type)}${v.cuisine ? ' · ' + esc(v.cuisine.replace(/_/g, ' ')) : ''}${
+        <div class="detail-sub">${typeLabel(v.type)}${v.cuisine ? ' · ' + esc(v.cuisine.replace(/_/g, ' ')) : ''}${
     dist ? ' · ' + dist + ' away' : ''
   }</div>
       </div>
@@ -605,7 +605,7 @@ function wireSearch() {
             <span class="dot" style="background:${AC_COLORS[k]}"></span>
             <div class="suggest-item__body">
               <div class="suggest-item__name">${esc(v.name)}</div>
-              <div class="suggest-item__meta">${capitalize(v.type)} · ${AC_LABELS[k]}${v.postcode ? ' · ' + esc(v.postcode) : ''}</div>
+              <div class="suggest-item__meta">${typeLabel(v.type)} · ${AC_LABELS[k]}${v.postcode ? ' · ' + esc(v.postcode) : ''}</div>
             </div></li>`;
         })
         .join('');
@@ -841,6 +841,9 @@ function esc(s) {
 }
 function capitalize(s) {
   return s ? s[0].toUpperCase() + s.slice(1) : s;
+}
+function typeLabel(t) {
+  return TYPE_LABELS[t] || capitalize(t);
 }
 let toastTimer;
 function toast(msg) {

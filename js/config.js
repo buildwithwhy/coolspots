@@ -59,6 +59,17 @@ export const AC_LABELS = {
   no: 'No AC',
 };
 
+// Venue categories (types) and their display labels.
+export const TYPES = ['pub', 'bar', 'cafe', 'restaurant', 'museum', 'public'];
+export const TYPE_LABELS = {
+  pub: 'Pub',
+  bar: 'Bar',
+  cafe: 'Café',
+  restaurant: 'Restaurant',
+  museum: 'Museum',
+  public: 'Public space',
+};
+
 // Controlled tag vocabulary (keeps user tags clean)
 export const TAG_OPTIONS = [
   'quiet',

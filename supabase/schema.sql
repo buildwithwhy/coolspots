@@ -44,7 +44,7 @@ create policy "ac_votes update" on public.ac_votes
 create table if not exists public.venue_suggestions (
   id         uuid primary key default gen_random_uuid(),
   name       text not null,
-  type       text not null check (type in ('pub','bar','cafe','restaurant','museum')),
+  type       text not null check (type in ('pub','bar','cafe','restaurant','museum','public')),
   address    text,
   lat        double precision,
   lon        double precision,
