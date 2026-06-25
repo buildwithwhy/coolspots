@@ -781,5 +781,18 @@
     "lat": 51.52608,
     "lng": -0.08043,
     "ac": "likely"
-  }
+  },
+
+  { "name": "Barbican Centre", "nb": "Barbican", "cat": "public", "address": "Silk Street, London EC2Y 8DS", "lat": 51.51992, "lng": -0.09173, "ac": "likely" },
+  { "name": "Southbank Centre", "nb": "South Bank", "cat": "public", "address": "Belvedere Road, London SE1 8XX", "lat": 51.50600, "lng": -0.11550, "ac": "likely" },
+  { "name": "Westfield Stratford City", "nb": "Stratford", "cat": "public", "address": "Montfichet Road, London E20 1EJ", "lat": 51.54259, "lng": -0.00448, "ac": "confirmed" },
+  { "name": "Westfield London", "nb": "White City", "cat": "public", "address": "Ariel Way, London W12 7GF", "lat": 51.50740, "lng": -0.22150, "ac": "confirmed" },
+
+  { "name": "Tate Modern", "nb": "Bankside", "cat": "museum", "address": "Bankside, London SE1 9TG", "lat": 51.50760, "lng": -0.09910, "ac": "confirmed" },
+  { "name": "Tate Britain", "nb": "Millbank", "cat": "museum", "address": "Millbank, London SW1P 4RG", "lat": 51.49156, "lng": -0.12876, "ac": "likely" },
+  { "name": "National Gallery", "nb": "Trafalgar Square", "cat": "museum", "address": "Trafalgar Square, London WC2N 5DN", "lat": 51.50889, "lng": -0.12875, "ac": "likely" },
+  { "name": "Victoria and Albert Museum", "nb": "South Kensington", "cat": "museum", "address": "Cromwell Road, London SW7 2RL", "lat": 51.49628, "lng": -0.17075, "ac": "likely" },
+  { "name": "Natural History Museum", "nb": "South Kensington", "cat": "museum", "address": "Cromwell Road, London SW7 5BD", "lat": 51.49557, "lng": -0.17908, "ac": "likely" },
+  { "name": "Science Museum", "nb": "South Kensington", "cat": "museum", "address": "Exhibition Road, London SW7 2DD", "lat": 51.49740, "lng": -0.17623, "ac": "likely" },
+  { "name": "Wellcome Collection", "nb": "Euston", "cat": "museum", "address": "183 Euston Road, London NW1 2BE", "lat": 51.52597, "lng": -0.13402, "ac": "confirmed" }
 ]

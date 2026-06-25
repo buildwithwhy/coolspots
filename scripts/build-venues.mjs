@@ -271,10 +271,14 @@ function mergeAcPlaces(venues, places) {
     let best = null;
     let bestDist = Infinity;
     const pName = normaliseName(p.name, p.nb);
+    const culturalSeed = p.cat === 'museum' || p.cat === 'public';
     for (const v of venues) {
       const d = haversineMeters(p.lat, p.lng, v.lat, v.lon);
       if (d > 500) continue;
-      const match = (d <= 200 && namesMatch(v.name, p)) || normaliseName(v.name) === pName;
+      // A museum/public seed must not tag a café/restaurant that happens to sit
+      // inside it (same name, same spot) — those are different venues.
+      const typeOk = !culturalSeed || v.type === 'museum' || v.type === 'public';
+      const match = typeOk && ((d <= 200 && namesMatch(v.name, p)) || normaliseName(v.name) === pName);
       if (match && d < bestDist) {
         best = v;
         bestDist = d;
@@ -344,6 +348,12 @@ function similarNames(a, b) {
   for (const t of tb) if (ta.has(t)) shared++;
   return shared / (ta.size + tb.size - shared) >= 0.6;
 }
+// A museum/public space and a food venue are distinct even at the same spot
+// (e.g. a museum and its café) — never dedupe across those groups.
+function typesCompatible(a, b) {
+  const cultural = (t) => t === 'museum' || t === 'public';
+  return cultural(a) === cultural(b);
+}
 function acRank(v) {
   const { status, source } = v.ac;
   if (source === 'user') return 5;
@@ -379,7 +389,11 @@ function dedupe(venues) {
         if (!arr) continue;
         for (const w of arr) {
           if (w === v || removed.has(w.id) || group.includes(w)) continue;
-          if (haversineMeters(v.lat, v.lon, w.lat, w.lon) <= MAX_M && similarNames(v.name, w.name)) {
+          if (
+            haversineMeters(v.lat, v.lon, w.lat, w.lon) <= MAX_M &&
+            similarNames(v.name, w.name) &&
+            typesCompatible(v.type, w.type)
+          ) {
             group.push(w);
           }
         }
