@@ -625,8 +625,14 @@ function wireControls() {
     openSuggest();
   });
   $('#about-install').addEventListener('click', () => {
-    closeAbout();
-    triggerInstall();
+    if (deferredPrompt || isIOS()) {
+      closeAbout();
+      triggerInstall();
+    } else {
+      const h = $('#install-hint');
+      h.hidden = false;
+      h.textContent = 'Open your browser menu and choose “Install app” / “Add to Home Screen”.';
+    }
   });
   // install banner + iOS instructions sheet
   $('#install-cta').addEventListener('click', () => {
@@ -887,26 +893,13 @@ function openAbout() {
 // Show the right "add to home screen" affordance for the device.
 function updateInstallUI() {
   const block = $('#install-block');
-  const btn = $('#about-install');
   const hint = $('#install-hint');
   if (isStandalone()) {
     block.hidden = true; // already installed
     return;
   }
   block.hidden = false;
-  if (deferredPrompt) {
-    btn.hidden = false;
-    btn.textContent = '📲 Add to Home Screen';
-    hint.hidden = true;
-  } else if (isIOS()) {
-    btn.hidden = false;
-    btn.textContent = '📲 How to install';
-    hint.hidden = true;
-  } else {
-    btn.hidden = true;
-    hint.hidden = false;
-    hint.textContent = 'In your browser menu, choose “Install app” / “Add to Home Screen”.';
-  }
+  hint.hidden = true; // shown only for generic desktop browsers, on click
 }
 function closeAbout() {
   $('#about-backdrop').hidden = true;

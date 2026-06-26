@@ -319,6 +319,11 @@ main { position: fixed; inset: var(--topbar-h) 0 0 0; }
   width: 100%; height: 42px; margin-top: 4px;
 }
 .pill--accent:hover { background: var(--cool-deep); border-color: var(--cool-deep); }
+.pill--ghost {
+  background: #fff; color: var(--cool-deep); border: 1px solid var(--cool);
+  height: 42px; font-weight: 600;
+}
+.pill--ghost:hover { background: #f0f9ff; }
 
 #suggest-backdrop, #about-backdrop, #correct-backdrop {
   position: fixed; inset: 0; z-index: 60;
@@ -394,6 +399,7 @@ main { position: fixed; inset: var(--topbar-h) 0 0 0; }
   display: inline-flex; vertical-align: middle; color: var(--cool-deep);
   background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 6px; padding: 1px 4px; margin: 0 1px;
 }
+.ios-more { font-weight: 700; letter-spacing: 1px; padding: 0 6px; line-height: 1.6; }
 @media (min-width: 721px) {
   #ios-install { align-items: center; }
   #ios-install-card { border-radius: var(--radius); margin: 16px; }
