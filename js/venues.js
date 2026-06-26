@@ -53,26 +53,18 @@ export function getVenue(id) {
 // --- displayed AC status: vote consensus overrides curated when ≥3 votes ------
 // `agg` is the Supabase aggregate ({ votes, total }) or null.
 export function displayedStatus(venue, agg) {
-  if (agg && agg.total >= CONSENSUS_MIN_VOTES) {
-    const entries = Object.entries(agg.votes);
-    const [topChoice] = entries.sort((a, b) => b[1] - a[1])[0];
-    const map = {
-      cold: { key: 'yes', label: 'Cold', source: 'votes' },
-      mild: { key: 'mild', label: 'Mild AC', source: 'votes' },
-      none: { key: 'no', label: 'No AC', source: 'votes' },
-      unsure: { key: 'unknown', label: 'Unclear', source: 'votes' },
-    };
-    const r = map[topChoice] || map.unsure;
-    return { ...r, total: agg.total, color: AC_COLORS[r.key] };
+  const key = consensusKeyFromAgg(agg); // null when not enough votes / a tie / only-unsure
+  if (key) {
+    return { key, label: AC_LABELS[key] || 'Unknown', source: 'votes', total: agg.total, color: AC_COLORS[key] };
   }
   // Fall back to curated/OSM status, labelled "Listed".
-  const key = venue.ac?.status || 'unknown';
+  const base = venue.ac?.status || 'unknown';
   return {
-    key,
-    label: AC_LABELS[key] || 'Unknown',
+    key: base,
+    label: AC_LABELS[base] || 'Unknown',
     source: 'listed',
     total: agg?.total || 0,
-    color: AC_COLORS[key] || AC_COLORS.unknown,
+    color: AC_COLORS[base] || AC_COLORS.unknown,
   };
 }
 
@@ -89,8 +81,17 @@ const CHOICE_TO_KEY = { cold: 'yes', mild: 'mild', none: 'no', unsure: 'unknown'
 // derive a status key from a vote aggregate ({ votes:{cold,mild,none,unsure}, total })
 export function consensusKeyFromAgg(agg) {
   if (!agg || agg.total < CONSENSUS_MIN_VOTES) return null;
-  const top = Object.entries(agg.votes).sort((a, b) => b[1] - a[1])[0][0];
-  return CHOICE_TO_KEY[top] || null;
+  // Plurality among the substantive answers. 'unsure' is an abstention — it
+  // never wins, it just means "couldn't tell".
+  const opts = [
+    ['cold', agg.votes.cold],
+    ['mild', agg.votes.mild],
+    ['none', agg.votes.none],
+  ].sort((a, b) => b[1] - a[1]);
+  const [topChoice, topN] = opts[0];
+  if (topN === 0) return null; // only 'unsure' votes → keep the listed status
+  if (opts[1][1] === topN) return null; // tie, no clear winner → keep the listed status
+  return CHOICE_TO_KEY[topChoice] || null;
 }
 export function setConsensus(entries) {
   consensus.clear();

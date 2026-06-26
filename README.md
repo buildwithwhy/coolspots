@@ -92,6 +92,8 @@ node scripts/build-areas.mjs --fresh    # refetch from Overpass
 
 Lower the threshold (1) surfaces every vote while the app is small; raise it to 3+ as it grows so one vote can't flip a place.
 
+The winner is a **plurality** of Cold / Mild / No-AC. "Unsure" is an abstention (never wins). A genuine **tie** = no consensus, so it falls back to the listed status (the vote tally is still shown).
+
 ### Moderating suggestions (local CLI)
 The `venue_suggestions` queue isn't publicly readable, and Supabase blocks the
 secret key in browsers — so moderation is a small local CLI that uses your
