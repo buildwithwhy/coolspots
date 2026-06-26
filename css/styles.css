@@ -274,6 +274,8 @@ main { position: fixed; inset: var(--topbar-h) 0 0 0; }
 .vote-btn.selected { border-color: var(--cool); background: #e0f2fe; color: var(--cool-deep); }
 .vote-tally { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px; }
 .tally-chip { background: #f0f9ff; border: 1px solid #bae6fd; color: var(--cool-deep); font-size: 13px; font-weight: 600; padding: 4px 10px; border-radius: 999px; }
+.share-nudge { margin-top: 10px; font-size: 13px; color: var(--muted); background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 12px; padding: 10px 12px; line-height: 1.4; }
+.share-nudge__btn { background: none; border: none; padding: 0; cursor: pointer; font: inherit; font-weight: 700; color: var(--cool-deep); text-decoration: underline; }
 
 .tag-current { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
 .tag-chip { background: #f0fdfa; border: 1px solid #99f6e4; color: #0f766e; font-size: 13px; font-weight: 600; padding: 4px 10px; border-radius: 999px; }
@@ -318,14 +320,14 @@ main { position: fixed; inset: var(--topbar-h) 0 0 0; }
 }
 .pill--accent:hover { background: var(--cool-deep); border-color: var(--cool-deep); }
 
-#suggest-backdrop, #about-backdrop {
+#suggest-backdrop, #about-backdrop, #correct-backdrop {
   position: fixed; inset: 0; z-index: 60;
   background: rgba(15, 23, 42, 0.45); backdrop-filter: blur(2px);
   display: flex; align-items: center; justify-content: center; padding: 16px;
 }
 /* the [hidden] attribute alone loses to the #id rule above — override explicitly */
-#suggest-backdrop[hidden], #about-backdrop[hidden] { display: none; }
-#suggest-modal, #about-modal {
+#suggest-backdrop[hidden], #about-backdrop[hidden], #correct-backdrop[hidden] { display: none; }
+#suggest-modal, #about-modal, #correct-modal {
   background: var(--card); width: 100%; max-width: 440px; max-height: 90vh; overflow-y: auto;
   border-radius: var(--radius); box-shadow: var(--shadow);
 }
@@ -334,19 +336,21 @@ main { position: fixed; inset: var(--topbar-h) 0 0 0; }
 .modal-body { padding: 0 16px 18px; }
 .modal-body p { margin: 0 0 12px; font-size: 15px; line-height: 1.45; }
 .modal-body h4 { margin: 18px 0 10px; font-size: 15px; }
-#suggest-form, #feedback-form { display: flex; flex-direction: column; gap: 12px; padding: 4px 16px 18px; }
-.modal-body #feedback-form { padding: 0; }
-#suggest-form label, #feedback-form label { display: flex; flex-direction: column; gap: 5px; font-size: 14px; font-weight: 600; }
+#suggest-form, #feedback-form, #correct-form { display: flex; flex-direction: column; gap: 12px; padding: 4px 16px 18px; }
+.modal-body #feedback-form, .modal-body #correct-form { padding: 0; }
+#suggest-form label, #feedback-form label, #correct-form label { display: flex; flex-direction: column; gap: 5px; font-size: 14px; font-weight: 600; }
 #suggest-form input, #suggest-form select, #suggest-form textarea,
-#feedback-form input, #feedback-form textarea {
+#feedback-form input, #feedback-form textarea,
+#correct-form input, #correct-form textarea {
   font: inherit; font-weight: 400; padding: 10px 12px; border: 1px solid var(--line);
   border-radius: 10px; background: #f8fafc; outline: none;
 }
-#suggest-form :focus, #feedback-form :focus { border-color: var(--cool); background: #fff; }
-#suggest-form textarea, #feedback-form textarea { resize: vertical; }
+#suggest-form :focus, #feedback-form :focus, #correct-form :focus { border-color: var(--cool); background: #fff; }
+#suggest-form textarea, #feedback-form textarea, #correct-form textarea { resize: vertical; }
 #suggest-form .check-row { flex-direction: row; align-items: center; gap: 9px; font-weight: 500; }
 #suggest-form .check-row input { width: 17px; height: 17px; accent-color: var(--cool); }
-#suggest-status, #feedback-status { margin: 0; min-height: 1em; }
+#suggest-status, #feedback-status, #correct-status { margin: 0; min-height: 1em; }
+#correct-submit { width: 100%; }
 #about-suggest, #about-install, #about-share { width: 100%; }
 #about-share { margin-bottom: 4px; }
 #install-block { margin-bottom: 4px; }

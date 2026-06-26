@@ -34,6 +34,8 @@ const $ = (sel) => document.querySelector(sel);
 const LIST_LIMIT = 80;
 let closeAutocomplete = () => {}; // set by wireSearch, called on Escape
 let deferredPrompt = null; // captured beforeinstallprompt event (Android/Chrome)
+let correctingVenue = null; // venue being corrected (dedicated correction sheet)
+let sharePrompted = false; // gentle post-vote share nudge, once per session
 
 const state = {
   filters: { types: new Set(['pub', 'bar', 'cafe', 'restaurant', 'museum', 'public']), ac: 'all', hideChains: false, openNow: false, query: '' },
@@ -425,6 +427,7 @@ function wireVoteButtons(v) {
       // let the user's vote recolour the pin/list if it now hits consensus (≥3)
       setConsensusOne(v.id, consensusKeyFromAgg(agg));
       refresh();
+      maybeShareNudge(); // gentle once-per-session share prompt
       try {
         await castVote(v.id, choice);
       } catch (err) {
@@ -473,17 +476,61 @@ function closeDetail() {
   history.replaceState(null, '', location.pathname + location.search);
 }
 
-// "Suggest a correction" — opens the feedback form pre-filled with this venue,
-// so any user (not just OSM editors) can report wrong hours/AC/closed-down etc.
+// "Suggest a correction" — its own focused sheet (not the About info sheet), so
+// anyone (not just OSM editors) can report wrong hours/AC/closed-down etc.
 function suggestCorrection(v) {
+  correctingVenue = v;
   closeDetail();
-  openAbout();
-  const ta = $('#feedback-form [name="message"]');
-  if (ta) {
-    ta.value = `Correction — ${v.name} (${v.id}): `;
-    ta.focus();
-    ta.setSelectionRange(ta.value.length, ta.value.length);
+  $('#correct-venue').textContent = v.name;
+  $('#correct-form').reset();
+  $('#correct-status').textContent = supabaseEnabled ? '' : 'Needs Supabase configured to send.';
+  $('#correct-backdrop').hidden = false;
+  $('#correct-form [name="message"]').focus();
+}
+function closeCorrection() {
+  $('#correct-backdrop').hidden = true;
+}
+async function onCorrectSubmit(e) {
+  e.preventDefault();
+  const form = e.target;
+  const btn = $('#correct-submit');
+  const status = $('#correct-status');
+  const data = Object.fromEntries(new FormData(form));
+  const msg = (data.message || '').trim();
+  if (!msg || !correctingVenue) return;
+  btn.disabled = true;
+  status.textContent = 'Sending…';
+  try {
+    const res = await submitFeedback({
+      message: `Correction — ${correctingVenue.name} (${correctingVenue.id}): ${msg}`,
+      email: (data.email || '').trim(),
+    });
+    if (res.offline) {
+      status.textContent = 'Supabase not configured — not sent.';
+    } else {
+      form.reset();
+      closeCorrection();
+      toast('Thanks — correction sent!');
+    }
+  } catch (err) {
+    console.warn('correction failed', err);
+    status.textContent = 'Could not send — please try again.';
+  } finally {
+    btn.disabled = false;
   }
+}
+
+// gentle, once-per-session nudge to share the app, right after a vote (high intent)
+function maybeShareNudge() {
+  if (sharePrompted) return;
+  const tally = $('#vote-tally');
+  if (!tally) return;
+  sharePrompted = true;
+  const n = document.createElement('div');
+  n.className = 'share-nudge';
+  n.innerHTML = `🙌 Thanks! Know someone who'd find this handy? <button type="button" class="share-nudge__btn">Share Cool Spots ❄️</button>`;
+  n.querySelector('.share-nudge__btn').addEventListener('click', shareApp);
+  tally.after(n);
 }
 
 // Share the whole app (native share sheet on mobile, copy-link fallback).
@@ -593,6 +640,13 @@ function wireControls() {
   });
   $('#feedback-form').addEventListener('submit', onFeedbackSubmit);
 
+  // suggest-a-correction (per-venue) sheet
+  $('#correct-close').addEventListener('click', closeCorrection);
+  $('#correct-backdrop').addEventListener('click', (e) => {
+    if (e.target.id === 'correct-backdrop') closeCorrection();
+  });
+  $('#correct-form').addEventListener('submit', onCorrectSubmit);
+
   // suggest a place (floating button)
   $('#fab-suggest').addEventListener('click', openSuggest);
   $('#suggest-close').addEventListener('click', closeSuggest);
@@ -616,6 +670,7 @@ function wireControls() {
     if (e.key !== 'Escape') return;
     closeAutocomplete();
     if (!$('#ios-install').hidden) $('#ios-install').hidden = true;
+    else if (!$('#correct-backdrop').hidden) closeCorrection();
     else if (!$('#about-backdrop').hidden) closeAbout();
     else if (!$('#suggest-backdrop').hidden) closeSuggest();
     else if ($('#filters').classList.contains('open')) $('#filters').classList.remove('open');

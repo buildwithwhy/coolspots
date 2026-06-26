@@ -168,6 +168,25 @@
       </div>
     </div>
 
+    <!-- suggest-a-correction modal (per-venue) -->
+    <div id="correct-backdrop" hidden>
+      <div id="correct-modal" role="dialog" aria-modal="true" aria-labelledby="correct-title">
+        <div class="modal-head">
+          <h3 id="correct-title">Suggest a correction</h3>
+          <button id="correct-close" class="icon-btn" aria-label="Close">✕</button>
+        </div>
+        <div class="modal-body">
+          <p class="muted">Fixing details for <strong id="correct-venue">this place</strong>.</p>
+          <form id="correct-form">
+            <label>What's wrong?<textarea name="message" required maxlength="500" rows="3" placeholder="e.g. opening hours are wrong, it's closed down, the AC is actually weak…"></textarea></label>
+            <label>Email <span class="muted">(optional, if you'd like a reply)</span><input name="email" type="email" maxlength="160" placeholder="you@example.com" /></label>
+            <button type="submit" class="pill pill--accent" id="correct-submit">Send correction</button>
+            <p id="correct-status" class="muted"></p>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <!-- suggest-a-place modal -->
     <div id="suggest-backdrop" hidden>
       <div id="suggest-modal" role="dialog" aria-modal="true" aria-labelledby="suggest-title">
