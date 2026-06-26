@@ -275,9 +275,9 @@ async function openDetail(id) {
     ${v.address || v.postcode ? `<div class="detail-row">📍 ${esc([v.address, v.postcode].filter(Boolean).join(', '))}</div>` : ''}
     ${
       v.opening_hours
-        ? `<div class="detail-row">🕑 ${esc(v.opening_hours)}<div class="hours-note muted">Hours via OpenStreetMap — may be outdated.${osmU ? ` <a href="${osmU}" target="_blank" rel="noopener">check / edit ↗</a>` : ''}</div></div>`
+        ? `<div class="detail-row">🕑 ${esc(v.opening_hours)}<div class="hours-note muted">Hours via OpenStreetMap — may be outdated.${osmU ? ` <a href="${osmU}" target="_blank" rel="noopener">edit on OSM</a>` : ''}</div></div>`
         : osmU
-          ? `<div class="detail-row muted">🕑 No hours listed · <a href="${osmU}" target="_blank" rel="noopener">add on OpenStreetMap ↗</a></div>`
+          ? `<div class="detail-row muted">🕑 No hours listed.<span class="hours-note muted"> <a href="${osmU}" target="_blank" rel="noopener">add on OSM</a></span></div>`
           : ''
     }
     ${v.website ? `<div class="detail-row">🔗 <a href="${esc(v.website)}" target="_blank" rel="noopener">Website</a></div>` : ''}
@@ -291,7 +291,7 @@ async function openDetail(id) {
     </div>
 
     <div class="detail-row correct-row">
-      <button id="detail-correct" type="button" class="correct-link">✎ Something wrong? Suggest a correction</button>
+      <button id="detail-correct" type="button" class="correct-link">✎ Suggest a correction</button>
     </div>
 
     <div class="vote-block">

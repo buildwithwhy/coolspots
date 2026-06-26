@@ -297,13 +297,20 @@ main { position: fixed; inset: var(--topbar-h) 0 0 0; }
 .open-badge.is-open { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
 .open-badge.is-closed { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
 .open-approx { font-weight: 500; opacity: 0.65; }
+/* OSM edit link: deliberately quiet secondary option */
 .hours-note { font-size: 12px; margin-top: 3px; }
-.hours-note a { color: var(--cool-deep); }
+.hours-note a { color: var(--muted); text-decoration: underline; text-underline-offset: 2px; }
+.hours-note a:hover { color: var(--cool-deep); }
+
+/* Native correction: the prominent, low-friction path — a clear tappable chip */
+.correct-row { padding-top: 4px; }
 .correct-link {
-  background: none; border: none; padding: 0; cursor: pointer;
-  font: inherit; font-size: 13px; color: var(--muted); text-decoration: underline;
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #f0f9ff; border: 1px solid #bae6fd; color: var(--cool-deep);
+  padding: 8px 14px; border-radius: 999px;
+  font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
 }
-.correct-link:hover { color: var(--cool-deep); }
+.correct-link:hover { background: #e0f2fe; border-color: var(--cool); }
 
 .pill--accent {
   background: var(--cool); color: #fff; border-color: var(--cool);
