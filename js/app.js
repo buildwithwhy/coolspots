@@ -306,14 +306,6 @@ async function openDetail(id) {
     </div>
 
     ${v.address || v.postcode ? `<div class="detail-row">📍 ${esc([v.address, v.postcode].filter(Boolean).join(', '))}</div>` : ''}
-    ${
-      v.opening_hours
-        ? `<div class="detail-row">🕑 ${esc(v.opening_hours)}<div class="hours-note muted">Hours via OpenStreetMap — may be outdated.${osmU ? ` <a href="${osmU}" target="_blank" rel="noopener">edit on OSM</a>` : ''}</div></div>`
-        : osmU
-          ? `<div class="detail-row muted">🕑 No hours listed.<span class="hours-note muted"> <a href="${osmU}" target="_blank" rel="noopener">add on OSM</a></span></div>`
-          : ''
-    }
-    ${v.website ? `<div class="detail-row">🔗 <a href="${esc(v.website)}" target="_blank" rel="noopener">Website</a></div>` : ''}
     <div class="detail-row directions-row">
       <span class="directions-label">↗ Directions</span>
       <div class="map-links">
@@ -321,10 +313,6 @@ async function openDetail(id) {
           .map((l) => `<a class="map-link" target="_blank" rel="noopener" href="${l.url}">${l.label}</a>`)
           .join('')}
       </div>
-    </div>
-
-    <div class="detail-row correct-row">
-      <button id="detail-correct" type="button" class="correct-link">✎ Suggest a correction</button>
     </div>
 
     <div class="vote-block">
@@ -342,6 +330,18 @@ async function openDetail(id) {
       <h3>Tags</h3>
       <div id="tag-current" class="tag-current"></div>
       <div id="tag-add" class="tag-add"></div>
+    </div>
+
+    ${
+      v.opening_hours
+        ? `<div class="detail-row">🕑 ${esc(v.opening_hours)}<div class="hours-note muted">Hours via OpenStreetMap — may be outdated.${osmU ? ` <a href="${osmU}" target="_blank" rel="noopener">edit on OSM</a>` : ''}</div></div>`
+        : osmU
+          ? `<div class="detail-row muted">🕑 No hours listed.<span class="hours-note muted"> <a href="${osmU}" target="_blank" rel="noopener">add on OSM</a></span></div>`
+          : ''
+    }
+    ${v.website ? `<div class="detail-row">🔗 <a href="${esc(v.website)}" target="_blank" rel="noopener">Website</a></div>` : ''}
+    <div class="detail-row correct-row">
+      <button id="detail-correct" type="button" class="correct-link">✎ Suggest a correction</button>
     </div>
   `;
 
@@ -988,12 +988,11 @@ function mapLinks(v) {
   const apple = { label: 'Apple Maps', url: `https://maps.apple.com/?daddr=${lat},${lon}&q=${name}` };
   const google = { label: 'Google Maps', url: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}` };
   const citymapper = { label: 'Citymapper', url: `https://citymapper.com/directions?endcoord=${lat},${lon}&endname=${name}` };
-  const osm = { label: 'OpenStreetMap', url: `https://www.openstreetmap.org/directions?to=${lat}%2C${lon}` };
 
   const ua = navigator.userAgent || '';
   const isApple = /iPhone|iPad|iPod|Macintosh/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   // device default first, then the others (Citymapper always offered — it's London)
-  return isApple ? [apple, google, citymapper, osm] : [google, apple, citymapper, osm];
+  return isApple ? [apple, google, citymapper] : [google, apple, citymapper];
 }
 
 // --- utils ------------------------------------------------------------------
