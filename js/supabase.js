@@ -61,6 +61,27 @@ export async function fetchVenueAggregates(venueId) {
   return { votes, total, tags };
 }
 
+// All votes in one read, aggregated per venue — feeds the map/filter consensus.
+// Returns { venue_id: { votes:{cold,mild,none,unsure}, total } }.
+export async function fetchAllVoteAggregates() {
+  const c = db();
+  if (!c) return {};
+  const { data, error } = await c.from('ac_votes').select('venue_id,choice');
+  if (error) {
+    console.warn('bulk votes read failed', error.message);
+    return {};
+  }
+  const out = {};
+  for (const row of data || []) {
+    const a = (out[row.venue_id] ||= { votes: { cold: 0, mild: 0, none: 0, unsure: 0 }, total: 0 });
+    if (row.choice in a.votes) {
+      a.votes[row.choice]++;
+      a.total++;
+    }
+  }
+  return out;
+}
+
 // --- writes -------------------------------------------------------------------
 // One vote per (venue_id, anon_id): upsert on conflict.
 export async function castVote(venueId, choice) {

@@ -17,6 +17,7 @@ const statusColorExpr = [
   'match',
   ['get', 'acStatus'],
   'yes', AC_COLORS.yes,
+  'mild', AC_COLORS.mild,
   'likely', AC_COLORS.likely,
   'no', AC_COLORS.no,
   AC_COLORS.unknown, // default → unknown

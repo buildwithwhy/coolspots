@@ -41,11 +41,14 @@ export const LONDON_CENTER = [-0.1276, 51.5072]; // [lon, lat]
 export const DEFAULT_ZOOM = 12;
 
 // AC status → colour scale (doubles as the legend)
+// Two different ideas, deliberately distinct colours:
+//   yes/cold = confirmed cold; mild = confirmed-but-weak AC (an intensity);
+//   likely = unconfirmed, "probably has AC" (a confidence). Mild ≠ Likely.
 export const AC_COLORS = {
   yes: '#0284c7', // cool blue   — Cold / confirmed AC
   cold: '#0284c7',
-  likely: '#14b8a6', // teal     — Mild / likely AC
-  mild: '#14b8a6',
+  mild: '#38bdf8', // sky        — Mild AC (has AC, runs weak)
+  likely: '#14b8a6', // teal     — Likely (probably has AC, unconfirmed)
   unknown: '#94a3b8', // slate    — Unknown
   no: '#f59e0b', // warm amber   — No AC
 };

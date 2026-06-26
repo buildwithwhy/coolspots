@@ -296,6 +296,9 @@ main { position: fixed; inset: var(--topbar-h) 0 0 0; }
 }
 .open-badge.is-open { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
 .open-badge.is-closed { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+.open-approx { font-weight: 500; opacity: 0.65; }
+.hours-note { font-size: 12px; margin-top: 3px; }
+.hours-note a { color: var(--cool-deep); }
 
 .pill--accent {
   background: var(--cool); color: #fff; border-color: var(--cool);

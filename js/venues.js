@@ -58,7 +58,7 @@ export function displayedStatus(venue, agg) {
     const [topChoice] = entries.sort((a, b) => b[1] - a[1])[0];
     const map = {
       cold: { key: 'yes', label: 'Cold', source: 'votes' },
-      mild: { key: 'likely', label: 'Mild AC', source: 'votes' },
+      mild: { key: 'mild', label: 'Mild AC', source: 'votes' },
       none: { key: 'no', label: 'No AC', source: 'votes' },
       unsure: { key: 'unknown', label: 'Unclear', source: 'votes' },
     };
@@ -76,9 +76,33 @@ export function displayedStatus(venue, agg) {
   };
 }
 
-// status used for map colouring / filtering before any votes are loaded
+// curated/OSM status, before any votes
 export function baseStatusKey(venue) {
   return venue.ac?.status || 'unknown';
+}
+
+// --- vote consensus overlay (drives map colour + filtering) -------------------
+// venue id → status key, only for venues with ≥3 votes. Votes override curated.
+const consensus = new Map();
+const CHOICE_TO_KEY = { cold: 'yes', mild: 'mild', none: 'no', unsure: 'unknown' };
+
+// derive a status key from a vote aggregate ({ votes:{cold,mild,none,unsure}, total })
+export function consensusKeyFromAgg(agg) {
+  if (!agg || agg.total < 3) return null;
+  const top = Object.entries(agg.votes).sort((a, b) => b[1] - a[1])[0][0];
+  return CHOICE_TO_KEY[top] || null;
+}
+export function setConsensus(entries) {
+  consensus.clear();
+  for (const [id, key] of entries) if (key) consensus.set(id, key);
+}
+export function setConsensusOne(id, key) {
+  if (key) consensus.set(id, key);
+  else consensus.delete(id);
+}
+// what the map + filters use: consensus when ≥3 votes, else curated status
+export function effectiveStatusKey(venue) {
+  return consensus.get(venue.id) || baseStatusKey(venue);
 }
 
 // --- filtering ----------------------------------------------------------------
@@ -87,9 +111,9 @@ export function matchesFilters(v, f) {
   if (f.types && f.types.size && !f.types.has(v.type)) return false;
   if (f.hideChains && v.chain) return false;
 
-  const status = baseStatusKey(v);
+  const status = effectiveStatusKey(v);
   if (f.ac === 'cold' && status !== 'yes') return false;
-  if (f.ac === 'likely' && !(status === 'yes' || status === 'likely')) return false;
+  if (f.ac === 'likely' && !(status === 'yes' || status === 'mild' || status === 'likely')) return false;
 
   if (f.openNow && !isOpenNow(v)) return false;
 
@@ -112,7 +136,7 @@ export function toGeoJSON(venues) {
     features: venues.map((v) => ({
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [v.lon, v.lat] },
-      properties: { id: v.id, name: v.name, type: v.type, acStatus: baseStatusKey(v) },
+      properties: { id: v.id, name: v.name, type: v.type, acStatus: effectiveStatusKey(v) },
     })),
   };
 }

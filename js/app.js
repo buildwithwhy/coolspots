@@ -8,6 +8,10 @@ import {
   toGeoJSON,
   getVenue,
   displayedStatus,
+  effectiveStatusKey,
+  setConsensus,
+  setConsensusOne,
+  consensusKeyFromAgg,
   haversineMeters,
   formatDistance,
 } from './venues.js';
@@ -21,6 +25,7 @@ import {
   submitSuggestion,
   submitFeedback,
   fetchApprovedSuggestions,
+  fetchAllVoteAggregates,
 } from './supabase.js';
 import { openLabel, prewarm as prewarmOpenHours } from './openhours.js';
 import { AC_LABELS, AC_COLORS, TAG_OPTIONS, TYPE_LABELS } from './config.js';
@@ -69,6 +74,7 @@ async function boot() {
   window.addEventListener('hashchange', openFromHash);
   prewarmOpenHours(allVenues()); // warm "open now" cache during idle
   if (supabaseEnabled) loadApprovedSuggestions(); // live moderated-suggestion overlay
+  if (supabaseEnabled) loadVoteConsensus(); // votes recolour/refilter the map
   if (!supabaseEnabled) markUserLayerDisabled();
 
   // PWA: register service worker (enables install + offline)
@@ -132,6 +138,22 @@ async function loadApprovedSuggestions() {
   }
 }
 
+// load all votes once → ≥3-vote consensus recolours & refilters venues on the map
+async function loadVoteConsensus() {
+  try {
+    const aggs = await fetchAllVoteAggregates();
+    const entries = [];
+    for (const [id, agg] of Object.entries(aggs)) {
+      const key = consensusKeyFromAgg(agg);
+      if (key) entries.push([id, key]);
+    }
+    setConsensus(entries);
+    MapView.onReady(refresh);
+  } catch (e) {
+    console.warn('vote consensus load failed', e);
+  }
+}
+
 // shareable links: open the venue named in the URL hash (#v=node/123)
 function openFromHash() {
   const m = location.hash.match(/^#v=(.+)$/);
@@ -177,7 +199,7 @@ function updateList() {
 
   const frag = document.createDocumentFragment();
   for (const { v, d } of withDist.slice(0, LIST_LIMIT)) {
-    const key = v.ac?.status || 'unknown';
+    const key = effectiveStatusKey(v);
     const dir = mapLinks(v)[0]; // device-default map app
     const li = document.createElement('li');
     li.className = 'list-item';
@@ -217,6 +239,7 @@ async function openDetail(id) {
   MapView.flyToVenue(v);
 
   const open = openLabel(v); // null when hours unknown/unparseable
+  const osmU = osmUrl(v); // OSM page to verify/edit (null for non-OSM venues)
 
   const panel = $('#detail');
   panel.classList.add('open');
@@ -240,7 +263,7 @@ async function openDetail(id) {
       </div>
     </div>
 
-    ${open ? `<div class="open-badge ${open.startsWith('Open') ? 'is-open' : 'is-closed'}">${open.startsWith('Open') ? '🟢' : '🔴'} ${esc(open)}</div>` : ''}
+    ${open ? `<div class="open-badge ${open.startsWith('Open') ? 'is-open' : 'is-closed'}" title="Estimated from listed opening hours, which may be outdated">${open.startsWith('Open') ? '🟢' : '🔴'} ${esc(open)}<span class="open-approx"> · approx</span></div>` : ''}
 
     <div id="consensus" class="consensus">
       <span class="badge" style="background:${AC_COLORS[baseKey]}">${AC_LABELS[baseKey]}</span>
@@ -250,7 +273,13 @@ async function openDetail(id) {
     </div>
 
     ${v.address || v.postcode ? `<div class="detail-row">📍 ${esc([v.address, v.postcode].filter(Boolean).join(', '))}</div>` : ''}
-    ${v.opening_hours ? `<div class="detail-row">🕑 ${esc(v.opening_hours)}</div>` : ''}
+    ${
+      v.opening_hours
+        ? `<div class="detail-row">🕑 ${esc(v.opening_hours)}<div class="hours-note muted">Hours via OpenStreetMap — may be outdated.${osmU ? ` <a href="${osmU}" target="_blank" rel="noopener">check / edit ↗</a>` : ''}</div></div>`
+        : osmU
+          ? `<div class="detail-row muted">🕑 No hours listed · <a href="${osmU}" target="_blank" rel="noopener">add on OpenStreetMap ↗</a></div>`
+          : ''
+    }
     ${v.website ? `<div class="detail-row">🔗 <a href="${esc(v.website)}" target="_blank" rel="noopener">Website</a></div>` : ''}
     <div class="detail-row directions-row">
       <span class="directions-label">↗ Directions</span>
@@ -354,6 +383,9 @@ function wireVoteButtons(v) {
       state.aggCache.set(v.id, agg);
       renderTally(agg);
       renderConsensus(v, agg);
+      // let the user's vote recolour the pin/list if it now hits consensus (≥3)
+      setConsensusOne(v.id, consensusKeyFromAgg(agg));
+      refresh();
       try {
         await castVote(v.id, choice);
       } catch (err) {
@@ -844,6 +876,11 @@ function capitalize(s) {
 }
 function typeLabel(t) {
   return TYPE_LABELS[t] || capitalize(t);
+}
+// OSM page for a venue (to verify/edit hours); null for user/suggestion venues
+function osmUrl(v) {
+  const m = String(v.id).match(/^(node|way|relation)\/(\d+)$/);
+  return m ? `https://www.openstreetmap.org/${m[1]}/${m[2]}` : null;
 }
 let toastTimer;
 function toast(msg) {
