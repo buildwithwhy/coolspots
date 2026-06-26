@@ -486,6 +486,28 @@ function suggestCorrection(v) {
   }
 }
 
+// Share the whole app (native share sheet on mobile, copy-link fallback).
+async function shareApp() {
+  const url = location.origin + '/';
+  const data = {
+    title: 'Cool Spots London ❄️',
+    text: 'Find London pubs, cafés, bars & public spaces with air conditioning — beat the heat.',
+    url,
+  };
+  try {
+    if (navigator.share) await navigator.share(data);
+    else {
+      await navigator.clipboard.writeText(url);
+      toast('Link copied — share it!');
+    }
+  } catch (err) {
+    if (err?.name !== 'AbortError') {
+      try { await navigator.clipboard.writeText(url); toast('Link copied'); }
+      catch { toast('Could not share'); }
+    }
+  }
+}
+
 async function shareVenue(v) {
   const url = `${location.origin}${location.pathname}#v=${encodeURIComponent(v.id)}`;
   const data = { title: `${v.name} — Cool Spots London`, text: `${v.name} on Cool Spots London`, url };
@@ -546,6 +568,10 @@ function wireControls() {
   $('#about-close').addEventListener('click', closeAbout);
   $('#about-backdrop').addEventListener('click', (e) => {
     if (e.target.id === 'about-backdrop') closeAbout();
+  });
+  $('#about-share').addEventListener('click', () => {
+    closeAbout();
+    shareApp();
   });
   $('#about-suggest').addEventListener('click', () => {
     closeAbout();

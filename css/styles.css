@@ -347,7 +347,8 @@ main { position: fixed; inset: var(--topbar-h) 0 0 0; }
 #suggest-form .check-row { flex-direction: row; align-items: center; gap: 9px; font-weight: 500; }
 #suggest-form .check-row input { width: 17px; height: 17px; accent-color: var(--cool); }
 #suggest-status, #feedback-status { margin: 0; min-height: 1em; }
-#about-suggest, #about-install { width: 100%; }
+#about-suggest, #about-install, #about-share { width: 100%; }
+#about-share { margin-bottom: 4px; }
 #install-block { margin-bottom: 4px; }
 #install-hint { margin: 8px 0 0; }
 
@@ -397,7 +398,7 @@ main { position: fixed; inset: var(--topbar-h) 0 0 0; }
 #toast {
   position: fixed; left: 50%; bottom: 80px; transform: translateX(-50%) translateY(20px);
   background: var(--ink); color: #fff; padding: 10px 18px; border-radius: 999px;
-  font-size: 14px; font-weight: 600; opacity: 0; pointer-events: none; transition: all 0.25s; z-index: 50;
+  font-size: 14px; font-weight: 600; opacity: 0; pointer-events: none; transition: all 0.25s; z-index: 70;
 }
 #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
