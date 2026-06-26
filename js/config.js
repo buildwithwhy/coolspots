@@ -36,6 +36,11 @@ export const SUPABASE_ENABLED =
   SUPABASE_PUBLISHABLE_KEY.length > 20;
 
 // MapLibre / OpenFreeMap
+// Votes override the curated AC status once a venue reaches this many votes.
+// Set to 1 while the app is small (surface every vote we have); raise to 3+ as
+// it grows so a single vote can't flip a place on its own.
+export const CONSENSUS_MIN_VOTES = 1;
+
 export const MAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty';
 export const LONDON_CENTER = [-0.1276, 51.5072]; // [lon, lat]
 export const DEFAULT_ZOOM = 12;

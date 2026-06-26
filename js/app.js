@@ -374,7 +374,7 @@ function renderConsensus(v, agg) {
   if (!el) return;
   const note =
     s.source === 'votes'
-      ? `Community consensus · ${s.total} vote${s.total === 1 ? '' : 's'}`
+      ? `From ${s.total} community vote${s.total === 1 ? '' : 's'}`
       : `Listed status${v.ac?.evidence ? ' · ' + esc(v.ac.evidence) : ''}`;
   el.innerHTML = `<span class="badge" style="background:${s.color}">${s.label}</span><span class="consensus-note">${note}</span>`;
 }

@@ -87,8 +87,10 @@ node scripts/build-areas.mjs --fresh    # refetch from Overpass
 **Keys:** Supabase replaced the legacy `anon` / `service_role` JWTs with **publishable** (`sb_publishable_...`) and **secret** (`sb_secret_...`) keys. This is a static client app, so it uses the **publishable** key — public by design, with Row Level Security restricting it to inserting votes/tags and reading aggregates. **Never** put the **secret** key here: it grants elevated access and is blocked from running in browsers. (A legacy `anon` key still works via `SUPABASE_ANON_KEY` if you're on an older project.)
 
 ### How AC status is shown
-- **≥ 3 votes:** community consensus from the modal vote, with the tally.
+- **Enough votes** (`CONSENSUS_MIN_VOTES` in `js/config.js`, currently **1**): the community vote consensus drives the marker colour, filters, and badge.
 - **otherwise:** the curated/OSM status, labelled "Listed".
+
+Lower the threshold (1) surfaces every vote while the app is small; raise it to 3+ as it grows so one vote can't flip a place.
 
 ### Moderating suggestions (local CLI)
 The `venue_suggestions` queue isn't publicly readable, and Supabase blocks the

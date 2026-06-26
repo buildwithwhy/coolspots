@@ -1,6 +1,6 @@
 // Venue data: load, filter, and the curated⇄vote consensus merge.
 
-import { AC_COLORS, AC_LABELS } from './config.js';
+import { AC_COLORS, AC_LABELS, CONSENSUS_MIN_VOTES } from './config.js';
 import { isOpenNow } from './openhours.js';
 
 let all = [];
@@ -53,7 +53,7 @@ export function getVenue(id) {
 // --- displayed AC status: vote consensus overrides curated when ≥3 votes ------
 // `agg` is the Supabase aggregate ({ votes, total }) or null.
 export function displayedStatus(venue, agg) {
-  if (agg && agg.total >= 3) {
+  if (agg && agg.total >= CONSENSUS_MIN_VOTES) {
     const entries = Object.entries(agg.votes);
     const [topChoice] = entries.sort((a, b) => b[1] - a[1])[0];
     const map = {
@@ -88,7 +88,7 @@ const CHOICE_TO_KEY = { cold: 'yes', mild: 'mild', none: 'no', unsure: 'unknown'
 
 // derive a status key from a vote aggregate ({ votes:{cold,mild,none,unsure}, total })
 export function consensusKeyFromAgg(agg) {
-  if (!agg || agg.total < 3) return null;
+  if (!agg || agg.total < CONSENSUS_MIN_VOTES) return null;
   const top = Object.entries(agg.votes).sort((a, b) => b[1] - a[1])[0][0];
   return CHOICE_TO_KEY[top] || null;
 }
