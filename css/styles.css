@@ -299,6 +299,11 @@ main { position: fixed; inset: var(--topbar-h) 0 0 0; }
 .open-approx { font-weight: 500; opacity: 0.65; }
 .hours-note { font-size: 12px; margin-top: 3px; }
 .hours-note a { color: var(--cool-deep); }
+.correct-link {
+  background: none; border: none; padding: 0; cursor: pointer;
+  font: inherit; font-size: 13px; color: var(--muted); text-decoration: underline;
+}
+.correct-link:hover { color: var(--cool-deep); }
 
 .pill--accent {
   background: var(--cool); color: #fff; border-color: var(--cool);

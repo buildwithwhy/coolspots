@@ -290,6 +290,10 @@ async function openDetail(id) {
       </div>
     </div>
 
+    <div class="detail-row correct-row">
+      <button id="detail-correct" type="button" class="correct-link">✎ Something wrong? Suggest a correction</button>
+    </div>
+
     <div class="vote-block">
       <h3>Is it actually cold?</h3>
       <div class="vote-grid" id="vote-grid">
@@ -310,6 +314,7 @@ async function openDetail(id) {
 
   panel.querySelector('#detail-close').addEventListener('click', closeDetail);
   panel.querySelector('#detail-share').addEventListener('click', () => shareVenue(v));
+  panel.querySelector('#detail-correct').addEventListener('click', () => suggestCorrection(v));
   wireVoteButtons(v);
   wireTagButtons(v);
   highlightLocalVote(v.id);
@@ -432,6 +437,19 @@ function closeDetail() {
   MapView.clearHighlight();
   state.currentId = null;
   history.replaceState(null, '', location.pathname + location.search);
+}
+
+// "Suggest a correction" — opens the feedback form pre-filled with this venue,
+// so any user (not just OSM editors) can report wrong hours/AC/closed-down etc.
+function suggestCorrection(v) {
+  closeDetail();
+  openAbout();
+  const ta = $('#feedback-form [name="message"]');
+  if (ta) {
+    ta.value = `Correction — ${v.name} (${v.id}): `;
+    ta.focus();
+    ta.setSelectionRange(ta.value.length, ta.value.length);
+  }
 }
 
 async function shareVenue(v) {
