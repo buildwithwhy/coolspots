@@ -48,20 +48,17 @@ const state = {
 
 // ---------------------------------------------------------------------------
 async function boot() {
-  const status = $('#load-status');
   try {
-    const { count, generated } = await loadVenues();
-    status.textContent = `${count.toLocaleString()} venues`;
+    const { generated } = await loadVenues();
     $('#data-date').textContent = generated ? `OSM data · ${generated}` : '';
-    setTimeout(() => $('#load-pill').classList.add('hide'), 2500); // declutter once loaded
     // load the area gazetteer for "search by area" (non-blocking, optional)
     fetch('data/areas.json')
       .then((r) => (r.ok ? r.json() : null))
       .then((j) => { if (j?.areas) state.areas = j.areas; })
       .catch(() => {});
   } catch (err) {
-    status.textContent = 'Failed to load venue data';
     console.error(err);
+    toast('Could not load venue data — please refresh.');
     return;
   }
 
