@@ -85,14 +85,48 @@ async function boot() {
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
+    maybeShowInstallBanner();
   });
   window.addEventListener('appinstalled', () => {
     deferredPrompt = null;
+    hideInstallBanner(true);
   });
+  // iOS has no beforeinstallprompt — nudge after the map settles
+  setTimeout(maybeShowInstallBanner, 4000);
 }
 
 function isStandalone() {
   return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
+function isIOS() {
+  const ua = navigator.userAgent || '';
+  return /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+function isPhone() {
+  return window.matchMedia('(max-width: 820px)').matches;
+}
+
+// Do the right install action for the platform: native prompt where available,
+// otherwise the visual iOS step-by-step.
+async function triggerInstall() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    return;
+  }
+  if (isIOS()) $('#ios-install').hidden = false;
+}
+
+const INSTALL_DISMISS_KEY = 'cs_install_dismissed';
+function maybeShowInstallBanner() {
+  if (isStandalone() || localStorage.getItem(INSTALL_DISMISS_KEY) || !isPhone()) return;
+  if (!deferredPrompt && !isIOS()) return; // only where install is actually possible
+  $('#install-banner').hidden = false;
+}
+function hideInstallBanner(remember) {
+  $('#install-banner').hidden = true;
+  if (remember) localStorage.setItem(INSTALL_DISMISS_KEY, '1');
 }
 
 // --- live suggestion overlay ------------------------------------------------
@@ -517,12 +551,19 @@ function wireControls() {
     closeAbout();
     openSuggest();
   });
-  $('#about-install').addEventListener('click', async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    await deferredPrompt.userChoice;
-    deferredPrompt = null;
+  $('#about-install').addEventListener('click', () => {
     closeAbout();
+    triggerInstall();
+  });
+  // install banner + iOS instructions sheet
+  $('#install-cta').addEventListener('click', () => {
+    hideInstallBanner(true);
+    triggerInstall();
+  });
+  $('#install-dismiss').addEventListener('click', () => hideInstallBanner(true));
+  $('#ios-install-close').addEventListener('click', () => ($('#ios-install').hidden = true));
+  $('#ios-install').addEventListener('click', (e) => {
+    if (e.target.id === 'ios-install') $('#ios-install').hidden = true;
   });
   $('#feedback-form').addEventListener('submit', onFeedbackSubmit);
 
@@ -548,7 +589,8 @@ function wireControls() {
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
     closeAutocomplete();
-    if (!$('#about-backdrop').hidden) closeAbout();
+    if (!$('#ios-install').hidden) $('#ios-install').hidden = true;
+    else if (!$('#about-backdrop').hidden) closeAbout();
     else if (!$('#suggest-backdrop').hidden) closeSuggest();
     else if ($('#filters').classList.contains('open')) $('#filters').classList.remove('open');
     else if ($('#detail').classList.contains('open')) closeDetail();
@@ -771,16 +813,14 @@ function updateInstallUI() {
     return;
   }
   block.hidden = false;
-  const ua = navigator.userAgent || '';
-  const isIOS = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   if (deferredPrompt) {
-    // Android / desktop Chrome: real one-tap install
     btn.hidden = false;
+    btn.textContent = '📲 Add to Home Screen';
     hint.hidden = true;
-  } else if (isIOS) {
-    btn.hidden = true;
-    hint.hidden = false;
-    hint.textContent = 'On iPhone/iPad: tap the Share icon, then “Add to Home Screen”.';
+  } else if (isIOS()) {
+    btn.hidden = false;
+    btn.textContent = '📲 How to install';
+    hint.hidden = true;
   } else {
     btn.hidden = true;
     hint.hidden = false;

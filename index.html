@@ -107,6 +107,40 @@
       Voting &amp; tagging are read-only until Supabase is configured — see README.
     </p>
 
+    <!-- install nudge (mobile, dismissible) -->
+    <div id="install-banner" hidden>
+      <span class="install-banner__mark">❄️</span>
+      <div class="install-banner__text">
+        <strong>Add Cool Spots to your phone</strong>
+        <span class="muted">One tap from your home screen — handy in a heatwave.</span>
+      </div>
+      <button id="install-cta" class="pill pill--accent">Install</button>
+      <button id="install-dismiss" class="icon-btn" aria-label="Not now">✕</button>
+    </div>
+
+    <!-- iOS install instructions (visual) -->
+    <div id="ios-install" hidden>
+      <div id="ios-install-card" role="dialog" aria-modal="true" aria-labelledby="ios-install-title">
+        <div class="modal-head">
+          <h3 id="ios-install-title">❄️ Add to Home Screen</h3>
+          <button id="ios-install-close" class="icon-btn" aria-label="Close">✕</button>
+        </div>
+        <div class="modal-body">
+          <p>Install Cool Spots for one-tap access. In <strong>Safari</strong>:</p>
+          <ol class="ios-steps">
+            <li>
+              <span class="ios-step-n">1</span>
+              <span>Tap the
+                <span class="ios-share" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M8.5 6.5 12 3l3.5 3.5"/><path d="M7 10H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-1"/></svg></span>
+                <strong>Share</strong> button (bottom of the screen).</span>
+            </li>
+            <li><span class="ios-step-n">2</span><span>Scroll down and tap <strong>Add to Home Screen</strong>.</span></li>
+            <li><span class="ios-step-n">3</span><span>Tap <strong>Add</strong> — and you're done. ❄️</span></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
     <!-- about / contact modal -->
     <div id="about-backdrop" hidden>
       <div id="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-title">
