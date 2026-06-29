@@ -1,9 +1,9 @@
-// Cool Spots London — minimal service worker.
+// Stay Cool London — minimal service worker.
 // Strategy: network-first for same-origin GETs (so the app is always fresh when
 // online), falling back to cache when offline. This enables "install to home
 // screen" and offline use without ever serving stale app code or data.
 
-const CACHE = 'coolspots-v1';
+const CACHE = 'staycool-v1';
 const SHELL = ['/', '/index.html', '/css/styles.css', '/js/app.js', '/manifest.webmanifest'];
 
 self.addEventListener('install', (e) => {

@@ -525,7 +525,7 @@ function maybeShareNudge() {
   sharePrompted = true;
   const n = document.createElement('div');
   n.className = 'share-nudge';
-  n.innerHTML = `🙌 Thanks! Know someone who'd find this handy? <button type="button" class="share-nudge__btn">Share Cool Spots ❄️</button>`;
+  n.innerHTML = `🙌 Thanks! Know someone who'd find this handy? <button type="button" class="share-nudge__btn">Share Stay Cool London ❄️</button>`;
   n.querySelector('.share-nudge__btn').addEventListener('click', shareApp);
   tally.after(n);
 }
@@ -534,7 +534,7 @@ function maybeShareNudge() {
 async function shareApp() {
   const url = location.origin + '/';
   const data = {
-    title: 'Cool Spots London ❄️',
+    title: 'Stay Cool London ❄️',
     text: 'Find London pubs, cafés, bars & public spaces with air conditioning — beat the heat.',
     url,
   };
@@ -554,7 +554,7 @@ async function shareApp() {
 
 async function shareVenue(v) {
   const url = `${location.origin}${location.pathname}#v=${encodeURIComponent(v.id)}`;
-  const data = { title: `${v.name} — Cool Spots London`, text: `${v.name} on Cool Spots London`, url };
+  const data = { title: `${v.name} — Stay Cool London`, text: `${v.name} on Stay Cool London`, url };
   try {
     if (navigator.share) {
       await navigator.share(data);

@@ -1,4 +1,4 @@
-# Cool Spots London ❄️
+# Stay Cool London ❄️
 
 A static web app that maps London pubs, bars, cafés, restaurants (and museums) with **air conditioning**. See venues on a map, find a cold spot near you, filter by type / AC status / **open now**, crowd-vote on whether a place is *actually* cold, **share a venue link**, and **suggest new places**.
 
