@@ -133,9 +133,15 @@ main { position: fixed; inset: var(--topbar-h) 0 0 0; }
 #fab-suggest:active { transform: scale(0.96); }
 #fab-suggest .fab-ico { font-size: 18px; line-height: 1; }
 @media (max-width: 720px) {
-  #fab-suggest { width: 40px; height: 40px; padding: 0; justify-content: center; }
-  #fab-suggest .fab-label { display: none; }
-  #fab-suggest .fab-ico { font-size: 22px; }
+  /* Keep the label on phones — a bare "+" next to the colour legend reads as
+     "more temperature options", not "add a place". Sit bottom-left: clear of
+     the top-left legend, the bottom-right zoom controls, and the map
+     attribution strip along the very bottom. */
+  #fab-suggest {
+    left: 12px; right: auto; top: auto; bottom: calc(34px + var(--safe-b));
+    height: 42px; padding: 0 16px;
+  }
+  #fab-suggest .fab-ico { font-size: 20px; }
 }
 
 
