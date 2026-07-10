@@ -249,6 +249,7 @@ function namesMatch(osmName, place) {
 
 function mapAcStatus(ac) {
   if (ac === 'confirmed') return { status: 'yes', confidence: 0.95 };
+  if (ac === 'mild') return { status: 'mild', confidence: 0.9 }; // field-confirmed but weak
   if (ac === 'likely') return { status: 'likely', confidence: 0.7 };
   return { status: 'unknown', confidence: 0.3 };
 }
