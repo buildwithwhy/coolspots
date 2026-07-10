@@ -204,7 +204,8 @@
               <option value="public">Public space</option>
             </select>
           </label>
-          <label>Address <span class="muted">(optional)</span><input name="address" maxlength="200" placeholder="12 Example Street, SE1 2AB" /></label>
+          <label class="check-row"><input type="checkbox" name="useloc" /> Use the current map centre as its location</label>
+          <label>Address <span class="muted">(optional — skip it if the map centre is right)</span><input name="address" maxlength="200" placeholder="12 Example Street, SE1 2AB" /></label>
           <label>How cold is it? <span class="muted">(optional)</span>
             <select name="ac_hint">
               <option value="">—</option>
@@ -215,7 +216,6 @@
             </select>
           </label>
           <label>Note <span class="muted">(optional)</span><textarea name="note" maxlength="280" rows="2" placeholder="Anything useful for moderators…"></textarea></label>
-          <label class="check-row"><input type="checkbox" name="useloc" /> Use the current map centre as its location</label>
           <button type="submit" class="pill pill--accent" id="suggest-submit">Submit suggestion</button>
           <p id="suggest-status" class="muted"></p>
         </form>
