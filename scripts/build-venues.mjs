@@ -2,7 +2,8 @@
 /**
  * build-venues.mjs — one-time (re-runnable) data pipeline.
  *
- * Pulls pubs / bars / cafés / restaurants from OpenStreetMap via Overpass,
+ * Pulls pubs / bars / cafés / restaurants (plus AC-tagged fast food) from
+ * OpenStreetMap via Overpass,
  * transforms the raw tags into the trimmed `venues.json` schema described in
  * the build spec, seeds AC status from OSM's `air_conditioning` tag, layers a
  * small hand-curated AC list on top, and writes data/venues.json.
@@ -56,7 +57,12 @@ function buildQuery([s, w, n, e]) {
   const lines = AMENITIES.map(
     (a) => `  nwr["amenity"="${a}"](${s},${w},${n},${e});`
   ).join('\n');
-  return `[out:json][timeout:180];\n(\n${lines}\n);\nout center tags;`;
+  // fast_food is ~6.8k venues in Greater London — mostly takeaway counters, so
+  // we don't ingest it wholesale. But the ~100 that carry an air_conditioning
+  // tag are exactly the surveyed sit-in places (burger/chicken chains etc.);
+  // include just those. normaliseType() shows them as "restaurant".
+  const fastFood = `  nwr["amenity"="fast_food"]["air_conditioning"](${s},${w},${n},${e});`;
+  return `[out:json][timeout:180];\n(\n${lines}\n${fastFood}\n);\nout center tags;`;
 }
 
 async function fetchOverpass(query) {
